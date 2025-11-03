@@ -293,6 +293,22 @@ body::-webkit-scrollbar {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+    .campo-editavel-arq {
+          border: 1px solid white;
+      padding: 5px 10px;
+      color: white;
+      background: transparent;
+      width: 255px;
+      height: 20px;
+      outline: none;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
     /* Versão pequena dos campos editáveis */
     .campo-editavel.pequeno {
       width: 50px;
@@ -636,12 +652,12 @@ body::-webkit-scrollbar {
     <div class="campo-editavel" contenteditable="true" id="info-nome"></div>
   </div>
   <div class="info-linha">
-    <label>IDADE</label>
-    <div class="campo-editavel" contenteditable="true" id="info-idade"></div>
-  </div>
-  <div class="info-linha">
     <label>RAÇA</label>
     <div class="campo-editavel" contenteditable="true" id="info-raca"></div>
+  </div>
+    <div class="info-linha">
+    <label>ARQUÉTIPO</label>
+    <div class="campo-editavel-arq" contenteditable="true" id="info-idade"></div>
   </div>
   <div class="info-linha">
     <label>LVL</label>
