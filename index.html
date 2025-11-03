@@ -305,7 +305,7 @@ body::-webkit-scrollbar {
       margin-top: 20px;
       position: absolute;
       top: 5%;
-      left: 1050px;
+      left: 1100px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -318,6 +318,19 @@ body::-webkit-scrollbar {
       font-weight: bold;
       font-size: 20px;
     }
+    .titulo-pericias {
+  font-size: 18px;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase; /* opcional, deixa em maiúsculas */
+  border-bottom: 2px solid white; /* linha decorativa opcional */
+  padding-bottom: 4px;
+  display: inline-block; /* permite limitar largura */
+  width: 275px; /* largura da linha */
+}
+
     .campo-editavel.grande {
       width: 370px;
       height: 80vh;
@@ -343,14 +356,14 @@ body::-webkit-scrollbar {
     }
     .lista-pericias-completa {
       position: absolute;
-      top: 0px;
+      top: 45px;
       left: 0px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 2px;
       z-index: 2;
       color: white;
-      font-size: 15px;
+      font-size: 13px;
     }
     .linha-pericia {
       display: flex;
@@ -416,7 +429,7 @@ body::-webkit-scrollbar {
     .abas {
       position: absolute;         /* Define que será posicionado fora do fluxo normal */
       top: 0px;                    /* Posição vertical da aba na tela */
-      left: 975px;                  /* Posição horizontal */
+      left: 1020px;                  /* Posição horizontal */
       display: flex;           /* Deixa lado a lado */
       border-bottom: 2px solid #333;
       margin-bottom: 20px;
@@ -448,7 +461,7 @@ body::-webkit-scrollbar {
       margin-top: 20px;
       position: absolute;
       top: 5%;
-      left: 1050px;
+      left: 1100px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -468,7 +481,7 @@ body::-webkit-scrollbar {
       margin-top: 20px;
       position: absolute;
       top: 5%;
-      left: 1050px;
+      left: 1100px;
       display: flex;
       flex-direction: column;
       gap: 10px; 
@@ -477,7 +490,7 @@ body::-webkit-scrollbar {
       margin-top: 20px;
       position: absolute;
       top: 5%;
-      left: 1050px;
+      left: 1100px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -702,6 +715,7 @@ body::-webkit-scrollbar {
 
 
 <div class="container-pericias">
+  <div class="titulo-pericias">PERÍCIAS</div>
   <div class="lista-pericias-completa">
     <div class="linha-pericia"><span class="pericia">Acrobacia</span><span class="atributo">(AGI)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-acrobacia"></div></div>
     <div class="linha-pericia"><span class="pericia">Atletismo</span><span class="atributo">(FOR)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-atletismo"></div></div>
@@ -774,285 +788,91 @@ body::-webkit-scrollbar {
 </div>
 
 
-  <script>
-    const personagemId = new URLSearchParams(window.location.search).get("page");
-    if (!personagemId) {
-      alert("Adicione ?page=nome na URL");
-      throw new Error("Sem personagem");
-    }
+<script>
+/* ==============================
+   🔹 CONFIGURAÇÃO INICIAL
+============================== */
+const personagemId = new URLSearchParams(window.location.search).get("page");
+if (!personagemId) {
+  alert("Adicione ?page=nome na URL");
+  throw new Error("Sem personagem");
+}
 
-    function handleImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const base64 = e.target.result;
-          document.getElementById('preview').src = base64;
-          db.ref("imagem/" + personagemId).set(base64);
-        }
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function salvarTexto(id) {
-  const valor = document.getElementById(id).innerHTML; // salva formatação HTML
+/* ==============================
+   🔹 FUNÇÕES DE SALVAR E CARREGAR DADOS
+============================== */
+function salvarTexto(id) {
+  const valor = document.getElementById(id).innerHTML;
   db.ref("texto/" + personagemId + "/" + id).set(valor);
 }
 
+function carregarDados() {
+  // imagem
+  db.ref("imagem/" + personagemId).once("value", snap => {
+    if (snap.exists()) document.getElementById("preview").src = snap.val();
+  });
 
-    function carregarDados() {
-      db.ref("imagem/" + personagemId).once("value", snap => {
-        if (snap.exists()) document.getElementById("preview").src = snap.val();
-      });
+  // textos comuns
+  const camposTexto = [
+    "edit-vig","edit-agi","edit-for","edit-pre","edit-int",
+    "info-nome","info-idade","info-raca","info-lvl","info-mov",
+    "info-ph","campo-habilidades","carga","itens","campo-idolos",
+    "notas","resistencias","vulnerabilidades","proficiencias"
+  ];
 
-      [
-  "edit-vig", "edit-agi", "edit-for", "edit-pre", "edit-int",
-  "info-nome", "info-idade", "info-raca", "info-lvl", "info-mov",
-  "info-ph", "campo-habilidades", "carga", "itens", "campo-idolos","notas",
-  "resistencias", "vulnerabilidades", "proficiencias", 
-  
+  camposTexto.forEach(id => {
+    db.ref("texto/" + personagemId + "/" + id).once("value", snap => {
+      if (snap.exists()) document.getElementById(id).innerHTML = snap.val();
+    });
+    document.getElementById(id).addEventListener("input", () => salvarTexto(id));
+  });
 
-].forEach(id => {
-db.ref("texto/" + personagemId + "/" + id).once("value", snap => {
-  if (snap.exists()) document.getElementById(id).innerHTML = snap.val(); // restaura o HTML
-});
-  document.getElementById(id).addEventListener("input", () => salvarTexto(id));
-});
+  // barras de HP / alma / sanidade
+  ["hp", "alma", "sanidade"].forEach(tipo => {
+    db.ref(`${tipo}/${personagemId}`).on("value", snap => {
+      if (snap.val()) {
+        document.getElementById(`${tipo}-input`).value = snap.val();
+        tipo === "hp" ? updateHP(snap.val(), false) : updateBar(tipo, snap.val(), false);
+      }
+    });
+  });
+}
 
+/* ==============================
+   🔹 FUNÇÃO DE IMAGEM
+============================== */
+function handleImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
 
-      ["hp", "alma", "sanidade"].forEach(tipo => {
-        db.ref(`${tipo}/${personagemId}`).on("value", snap => {
-          if (snap.val()) {
-            document.getElementById(`${tipo}-input`).value = snap.val();
-            tipo === "hp" ? updateHP(snap.val(), false) : updateBar(tipo, snap.val(), false);
-          }
-        });
-      });
-    }
-    function salvarPericia(id) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const base64 = e.target.result;
+    document.getElementById('preview').src = base64;
+    db.ref("imagem/" + personagemId).set(base64);
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ==============================
+   🔹 PERÍCIAS
+============================== */
+const idsPericias = [
+  "pericia-acrobacia","pericia-atletismo","pericia-bloqueio","pericia-canalizacao","pericia-combate",
+  "pericia-conducao","pericia-enganacao","pericia-esquiva","pericia-fortitude","pericia-furtividade",
+  "pericia-iniciativa","pericia-intimidacao","pericia-intuicao","pericia-investigacao","pericia-medicina",
+  "pericia-oficio","pericia-precisao","pericia-percepcao","pericia-religiao","pericia-sobrevivencia",
+  "pericia-tecnologia","pericia-vontade","pericia-ladinagem"
+];
+
+function salvarPericia(id) {
   const valor = document.getElementById(id).innerText;
   db.ref("pericias/" + personagemId + "/" + id).set(valor);
 }
 
-    const idsPericias = [
-  "pericia-acrobacia", "pericia-atletismo", "pericia-bloqueio", "pericia-canalizacao", "pericia-combate",
-  "pericia-conducao", "pericia-enganacao", "pericia-esquiva", "pericia-fortitude", "pericia-furtividade",
-  "pericia-iniciativa", "pericia-intimidacao", "pericia-intuicao", "pericia-investigacao", "pericia-medicina",
-  "pericia-oficio", "pericia-precisao", "pericia-percepcao", "pericia-religiao", "pericia-sobrevivencia",
-  "pericia-tecnologia", "pericia-vontade", "pericia-ladinagem"
-];
-
-idsPericias.forEach(id => {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  // Carrega valor salvo
-db.ref("pericias/" + personagemId + "/" + id).once("value", snap => {
-  if (snap.exists()) {
-    el.innerText = snap.val();
-    verificarCorPericia(id); // aplica roxo se tiver conteúdo
-  }
-});
-
-// verifica se tinha sido salvo como roxo mesmo se vazio (forçado)
-db.ref("pericias/" + personagemId + "/" + id + "_cor").once("value", snap => {
-  if (snap.exists()) {
-    el.closest(".linha-pericia").classList.add("roxa");
-  }
-});
-
-
-  // Salva alterações
-  el.addEventListener("input", () => {
-  salvarPericia(id);
-  verificarCorPericia(id);
-});
-
-});
-
-
-    document.addEventListener("DOMContentLoaded", carregarDados);
-
-function updateHP(value, salvar = true) {
-  let [current, max] = value.split("/").map(Number);
-  const bar = document.getElementById("hp-bar");
-  const negativeHpBar = document.getElementById("negative-hp-bar");
-  const excessoBar = document.getElementById("hp-excesso");
-  const input = document.getElementById("hp-input");
-  const dead = document.getElementById("dead-message");
-
-  if (!isNaN(current) && !isNaN(max) && max > 0) {
-    if (salvar) db.ref("hp/" + personagemId).set(value);
-
-    const maxNegative = Math.floor(max / 2);
-    let currentInt = current < 0 ? Math.floor(current) : Math.floor(current);
-
-    if (currentInt < -maxNegative) currentInt = -maxNegative;
-
-    const perc = (current / max) * 100;
-    bar.style.width = Math.max(0, perc) + "%";
-
-    // barra preta (negativa)
-    let negativePercent = 0;
-    if (currentInt < 0) {
-      negativePercent = Math.floor((-currentInt / maxNegative) * 100);
-      if (negativePercent > 100) negativePercent = 100;
-    }
-    negativeHpBar.style.width = negativePercent + "%";
-
-    // barra laranja (excesso)
-    if (current > max) {
-      const excesso = ((current - max) / max) * 100;
-      excessoBar.style.width = Math.min(excesso, 100) + "%";
-    } else {
-      excessoBar.style.width = "0%";
-    }
-
-    // cor da barra principal e status de morte
-    if (currentInt <= 0) {
-      if (currentInt <= -maxNegative) {
-        bar.style.backgroundColor = "black";
-        dead.style.display = "block";
-        input.style.opacity = "0";
-      } else {
-        bar.style.backgroundColor = "black";
-        dead.style.display = "none";
-        input.style.opacity = "1";
-      }
-    } else if (perc > 50) {
-      bar.style.backgroundColor = "rgb(182, 36, 36)";
-      dead.style.display = "none";
-      input.style.opacity = "1";
-    } else {
-      bar.style.backgroundColor = "rgb(121, 26, 26)";
-      dead.style.display = "none";
-      input.style.opacity = "1";
-    }
-  } else {
-    bar.style.width = "0";
-    negativeHpBar.style.width = "0";
-    excessoBar.style.width = "0";
-    bar.style.backgroundColor = "black";
-    dead.style.display = "none";
-    input.style.opacity = "1";
-  }
-}
-
-
-    function changeHP(amount) {
-      const input = document.getElementById("hp-input");
-      let [current, max] = input.value.split("/").map(Number);
-      if (!isNaN(current) && !isNaN(max) && max > 0) {
-        current = Math.max(Math.floor(-max / 2), current + amount);
-        input.value = `${current}/${max}`;
-        updateHP(input.value);
-      }
-    }
-
-    function updateBar(tipo, value, salvar = true) {
-      const [current, max] = value.split("/").map(Number);
-      const bar = document.getElementById(`${tipo}-bar`);
-      if (!isNaN(current) && !isNaN(max) && max > 0) {
-        if (salvar) db.ref(`${tipo}/${personagemId}`).set(value);
-        const perc = (current / max) * 100;
-        bar.style.width = Math.max(0, perc) + "%";
-      } else {
-        bar.style.width = "0%";
-      }
-    }
-
-    function changeBar(tipo, amount) {
-      const input = document.getElementById(`${tipo}-input`);
-      let [current, max] = input.value.split("/").map(Number);
-      if (!isNaN(current) && !isNaN(max) && max > 0) {
-        current = Math.max(0,(max, current + amount));
-        input.value = `${current}/${max}`;
-        updateBar(tipo, input.value);
-      }
-    }
-document.getElementById('campo-habilidades').addEventListener('keydown', function(e) {
-  const campo = this;
-
-  if (e.key === ' ' || e.code === 'Space') {
-    const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
-    const node = range.startContainer;
-
-    const textBeforeCursor = node.textContent?.substring(0, range.startOffset) || '';
-
-    if (textBeforeCursor.endsWith('-')) {
-      e.preventDefault();
-
-      // Remove o "-" digitado
-      node.textContent = textBeforeCursor.slice(0, -1);
-
-      // Insere o marcador de lista
-      document.execCommand('insertHTML', false, '• ');
-    }
-  }
-
-  if (e.key === 'Enter') {
-    setTimeout(() => {
-      const sel = window.getSelection();
-      if (!sel.rangeCount) return;
-      const range = sel.getRangeAt(0);
-      const container = range.startContainer;
-
-      // Pega o elemento direto dentro do contenteditable que contém o cursor
-      function getLineNode(node) {
-        while (node && node !== campo) {
-          if (node.parentNode === campo) return node;
-          node = node.parentNode;
-        }
-        return null;
-      }
-
-      const currentLine = getLineNode(container);
-      if (!currentLine) return;
-
-      // Se a linha nova estiver vazia, insere o marcador
-      if (currentLine.textContent.trim() === '') {
-        // Remove <br> se for único nó (pode atrapalhar)
-        if (currentLine.childNodes.length === 1 && currentLine.firstChild.nodeName === 'BR') {
-          currentLine.removeChild(currentLine.firstChild);
-        }
-
-        // Cria o marcador
-        const marcadorSpan = document.createElement('span');
-        marcadorSpan.textContent = '• ';
-        marcadorSpan.contentEditable = 'false';
-        marcadorSpan.style.userSelect = 'none';
-
-        // Insere no começo da linha
-        currentLine.insertBefore(marcadorSpan, currentLine.firstChild);
-
-        // Texto invisível para posicionar o cursor depois do marcador
-        const zwsp = document.createTextNode('\u200B');
-        currentLine.insertBefore(zwsp, marcadorSpan.nextSibling);
-
-        // Move o cursor para depois do marcador
-        const newRange = document.createRange();
-        newRange.setStart(zwsp, 1);
-        newRange.collapse(true);
-
-        sel.removeAllRanges();
-        sel.addRange(newRange);
-      }
-    }, 0);
-  }
-});
-function trocarAba(abaId) {
-  document.querySelectorAll(".aba").forEach(el => el.classList.remove("ativa"));
-  document.querySelectorAll(".conteudo-aba").forEach(el => el.style.display = "none");
-
-  document.querySelector(`.aba[onclick*="${abaId}"]`).classList.add("ativa");
-  document.getElementById(abaId).style.display = "block";
-}
-// Verifica se o campo tem valor e aplica classe roxa
 function verificarCorPericia(id) {
   const el = document.getElementById(id);
   const linha = el.closest(".linha-pericia");
-
   if (!linha) return;
 
   const valor = el.innerText.trim();
@@ -1064,167 +884,361 @@ function verificarCorPericia(id) {
     db.ref("pericias/" + personagemId + "/" + id + "_cor").remove();
   }
 }
-document.getElementById('itens').addEventListener('keydown', function(e) {
-  const campo = this;
 
-  if (e.key === ' ' || e.code === 'Space') {
-    const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
-    const node = range.startContainer;
+// Inicializa perícias
+idsPericias.forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
 
-    const textBeforeCursor = node.textContent?.substring(0, range.startOffset) || '';
-
-    if (textBeforeCursor.endsWith('-')) {
-      e.preventDefault();
-
-      // Remove o "-" digitado
-      node.textContent = textBeforeCursor.slice(0, -1);
-
-      // Insere o marcador de lista
-      document.execCommand('insertHTML', false, '• ');
+  db.ref("pericias/" + personagemId + "/" + id).once("value", snap => {
+    if (snap.exists()) {
+      el.innerText = snap.val();
+      verificarCorPericia(id);
     }
-  }
+  });
 
-  if (e.key === 'Enter') {
-    setTimeout(() => {
-      const sel = window.getSelection();
-      if (!sel.rangeCount) return;
-      const range = sel.getRangeAt(0);
-      const container = range.startContainer;
+  db.ref("pericias/" + personagemId + "/" + id + "_cor").once("value", snap => {
+    if (snap.exists()) el.closest(".linha-pericia").classList.add("roxa");
+  });
 
-      // Pega o elemento direto dentro do contenteditable que contém o cursor
-      function getLineNode(node) {
-        while (node && node !== campo) {
-          if (node.parentNode === campo) return node;
-          node = node.parentNode;
-        }
-        return null;
-      }
-
-      const currentLine = getLineNode(container);
-      if (!currentLine) return;
-
-      // Se a linha nova estiver vazia, insere o marcador
-      if (currentLine.textContent.trim() === '') {
-        // Remove <br> se for único nó (pode atrapalhar)
-        if (currentLine.childNodes.length === 1 && currentLine.firstChild.nodeName === 'BR') {
-          currentLine.removeChild(currentLine.firstChild);
-        }
-
-        // Cria o marcador
-        const marcadorSpan = document.createElement('span');
-        marcadorSpan.textContent = '• ';
-        marcadorSpan.contentEditable = 'false';
-        marcadorSpan.style.userSelect = 'none';
-
-        // Insere no começo da linha
-        currentLine.insertBefore(marcadorSpan, currentLine.firstChild);
-
-        // Texto invisível para posicionar o cursor depois do marcador
-        const zwsp = document.createTextNode('\u200B');
-        currentLine.insertBefore(zwsp, marcadorSpan.nextSibling);
-
-        // Move o cursor para depois do marcador
-        const newRange = document.createRange();
-        newRange.setStart(zwsp, 1);
-        newRange.collapse(true);
-
-        sel.removeAllRanges();
-        sel.addRange(newRange);
-      }
-    }, 0);
-  }
+  el.addEventListener("input", () => {
+    salvarPericia(id);
+    verificarCorPericia(id);
+  });
 });
-document.getElementById('campo-idolos').addEventListener('keydown', function(e) {
-  const campo = this;
 
-  if (e.key === ' ' || e.code === 'Space') {
-    const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
-    const node = range.startContainer;
+/* ==============================
+   🔹 BARRAS DE STATUS (HP, Alma, Sanidade)
+============================== */
+function updateHP(value, salvar = true) {
+  // Extrai números e o valor entre parênteses (vida temporária)
+  const match = value.match(/^(-?\d+)\s*\/\s*(\d+)(?:\s*\((\-?\d+)\))?$/);
+  if (!match) return;
 
-    const textBeforeCursor = node.textContent?.substring(0, range.startOffset) || '';
+  let current = parseInt(match[1]);
+  let max = parseInt(match[2]);
+  let extra = parseInt(match[3]) || 0;
 
-    if (textBeforeCursor.endsWith('-')) {
-      e.preventDefault();
+  const bar = document.getElementById("hp-bar");
+  const negative = document.getElementById("negative-hp-bar");
+  const excesso = document.getElementById("hp-excesso");
+  const input = document.getElementById("hp-input");
+  const dead = document.getElementById("dead-message");
 
-      // Remove o "-" digitado
-      node.textContent = textBeforeCursor.slice(0, -1);
+  if (max <= 0) return;
 
-      // Insere o marcador de lista
-      document.execCommand('insertHTML', false, '• ');
-    }
-  }
+  if (salvar) db.ref("hp/" + personagemId).set(value);
 
-  if (e.key === 'Enter') {
-    setTimeout(() => {
-      const sel = window.getSelection();
-      if (!sel.rangeCount) return;
-      const range = sel.getRangeAt(0);
-      const container = range.startContainer;
+  const maxNeg = Math.floor(max / 2);
+  current = Math.max(current, -maxNeg);
 
-      // Pega o elemento direto dentro do contenteditable que contém o cursor
-      function getLineNode(node) {
-        while (node && node !== campo) {
-          if (node.parentNode === campo) return node;
-          node = node.parentNode;
-        }
-        return null;
-      }
+  // porcentagem base (barra vermelha)
+  const perc = (current / max) * 100;
+  bar.style.width = Math.max(0, perc) + "%";
 
-      const currentLine = getLineNode(container);
-      if (!currentLine) return;
+  // barra negativa (hp abaixo de 0)
+  const negPerc = current < 0 ? Math.min(100, (-current / maxNeg) * 100) : 0;
+  negative.style.width = negPerc + "%";
 
-      // Se a linha nova estiver vazia, insere o marcador
-      if (currentLine.textContent.trim() === '') {
-        // Remove <br> se for único nó (pode atrapalhar)
-        if (currentLine.childNodes.length === 1 && currentLine.firstChild.nodeName === 'BR') {
-          currentLine.removeChild(currentLine.firstChild);
-        }
+  // excesso padrão (ex: 12/10) + adicional entre parênteses (10/10 (2))
+  let excPerc = 0;
+  if (current > max) excPerc = ((current - max) / max) * 100;
+  if (extra > 0) excPerc += (extra / max) * 100;
+  excesso.style.width = Math.min(excPerc, 100) + "%";
 
-        // Cria o marcador
-        const marcadorSpan = document.createElement('span');
-        marcadorSpan.textContent = '• ';
-        marcadorSpan.contentEditable = 'false';
-        marcadorSpan.style.userSelect = 'none';
-
-        // Insere no começo da linha
-        currentLine.insertBefore(marcadorSpan, currentLine.firstChild);
-
-        // Texto invisível para posicionar o cursor depois do marcador
-        const zwsp = document.createTextNode('\u200B');
-        currentLine.insertBefore(zwsp, marcadorSpan.nextSibling);
-
-        // Move o cursor para depois do marcador
-        const newRange = document.createRange();
-        newRange.setStart(zwsp, 1);
-        newRange.collapse(true);
-
-        sel.removeAllRanges();
-        sel.addRange(newRange);
-      }
-    }, 0);
-  }
-});
-function updateBar(tipo, value, salvar = true) {
-  const [current, max] = value.split("/").map(Number);
-  const bar = document.getElementById(`${tipo}-bar`);
-  const excesso = document.getElementById(`${tipo}-excesso`);
-
-  if (!isNaN(current) && !isNaN(max) && max > 0) {
-    if (salvar) db.ref(`${tipo}/${personagemId}`).set(value);
-
-    const basePerc = Math.min(100, (current / max) * 100);
-    const excessoPerc = current > max ? ((current - max) / max) * 100 : 0;
-
-    bar.style.width = basePerc + "%";
-    excesso.style.width = excessoPerc + "%";
+  // Cores e estado
+  if (current <= 0) {
+    bar.style.backgroundColor = "black";
+    dead.style.display = current <= -maxNeg ? "block" : "none";
+    input.style.opacity = current <= -maxNeg ? "0" : "1";
   } else {
-    bar.style.width = "0%";
-    excesso.style.width = "0%";
+    bar.style.backgroundColor = perc > 50 ? "rgb(182,36,36)" : "rgb(121,26,26)";
+    dead.style.display = "none";
+    input.style.opacity = "1";
   }
 }
 
-  </script>
-</body>
-</html>
+/* ==============================
+   🔹 OUTRAS BARRAS (Alma, Sanidade, etc)
+============================== */
+function updateBar(tipo, value, salvar = true) {
+  const match = value.match(/^(\d+)\s*\/\s*(\d+)(?:\s*\((\d+)\))?$/);
+  if (!match) return;
+
+  let current = parseInt(match[1]);
+  let max = parseInt(match[2]);
+  let extra = parseInt(match[3]) || 0;
+
+  const bar = document.getElementById(`${tipo}-bar`);
+  const excesso = document.getElementById(`${tipo}-excesso`);
+
+  if (max <= 0) return;
+
+  if (salvar) db.ref(`${tipo}/${personagemId}`).set(value);
+
+  const basePerc = Math.min(100, (current / max) * 100);
+  let excessoPerc = 0;
+
+  if (current > max) excessoPerc = ((current - max) / max) * 100;
+  if (extra > 0) excessoPerc += (extra / max) * 100;
+
+  bar.style.width = basePerc + "%";
+  excesso.style.width = Math.min(excessoPerc, 100) + "%";
+}
+
+/* ==============================
+   🔹 ALTERAR VALORES (Setas)
+============================== */
+function changeHP(amount) {
+  const input = document.getElementById("hp-input");
+
+  // Captura valores com regex (ex: 10/10 (2))
+  const match = input.value.match(/^(-?\d+)\s*\/\s*(\d+)(?:\s*\((\-?\d+)\))?$/);
+  if (!match) return;
+
+  let current = parseInt(match[1]);
+  const max = parseInt(match[2]);
+  const extra = parseInt(match[3]) || 0;
+
+  if (isNaN(current) || isNaN(max) || max <= 0) return;
+
+  // Ajusta valor principal
+  current = Math.max(Math.floor(-max / 2), current + amount);
+
+  // Atualiza o campo mantendo o extra
+  input.value = `${current}/${max}${extra ? ` (${extra})` : ""}`;
+
+  updateHP(input.value);
+}
+
+function changeBar(tipo, amount) {
+  const input = document.getElementById(`${tipo}-input`);
+
+  // Captura valores com regex (ex: 10/10 (2))
+  const match = input.value.match(/^(\d+)\s*\/\s*(\d+)(?:\s*\((\d+)\))?$/);
+  if (!match) return;
+
+  let current = parseInt(match[1]);
+  const max = parseInt(match[2]);
+  const extra = parseInt(match[3]) || 0;
+
+  if (isNaN(current) || isNaN(max) || max <= 0) return;
+
+  // Ajusta valor base
+  current = Math.max(0, current + amount);
+
+  // Atualiza mantendo o valor extra
+  input.value = `${current}/${max}${extra ? ` (${extra})` : ""}`;
+
+  updateBar(tipo, input.value);
+}
+/* ==============================
+   🔹 ALTERAR VALORES (Setas)
+============================== */
+function changeHP(amount) {
+  const input = document.getElementById("hp-input");
+
+  // Captura valores com regex (ex: 10/10 (2))
+  const match = input.value.match(/^(-?\d+)\s*\/\s*(\d+)(?:\s*\((\-?\d+)\))?$/);
+  if (!match) return;
+
+  let current = parseInt(match[1]);
+  const max = parseInt(match[2]);
+  let extra = parseInt(match[3]) || 0;
+
+  if (isNaN(current) || isNaN(max) || max <= 0) return;
+
+  if (amount < 0 && extra > 0) {
+    // Diminui o extra primeiro
+    extra += amount; // amount é negativo
+    if (extra < 0) {
+      current += extra; // restante vai para o HP normal
+      extra = 0;
+    }
+  } else {
+    // Aumenta HP base ou extra
+    current += amount;
+  }
+
+  // Garante que HP mínimo não quebre a barra
+  const maxNeg = Math.floor(max / 2);
+  current = Math.max(current, -maxNeg);
+
+  // Atualiza o campo
+  input.value = `${current}/${max}${extra > 0 ? ` (${extra})` : ""}`;
+
+  updateHP(input.value);
+}
+
+function changeBar(tipo, amount) {
+  const input = document.getElementById(`${tipo}-input`);
+
+  // Captura valores com regex (ex: 10/10 (2))
+  const match = input.value.match(/^(\d+)\s*\/\s*(\d+)(?:\s*\((\d+)\))?$/);
+  if (!match) return;
+
+  let current = parseInt(match[1]);
+  const max = parseInt(match[2]);
+  let extra = parseInt(match[3]) || 0;
+
+  if (isNaN(current) || isNaN(max) || max <= 0) return;
+
+  if (amount < 0 && extra > 0) {
+    // Diminui o extra primeiro
+    extra += amount; // amount é negativo
+    if (extra < 0) {
+      current += extra; // restante vai para o valor base
+      extra = 0;
+    }
+  } else {
+    current += amount;
+  }
+
+  current = Math.max(0, current);
+
+  // Atualiza mantendo o valor extra
+  input.value = `${current}/${max}${extra > 0 ? ` (${extra})` : ""}`;
+
+  updateBar(tipo, input.value);
+}
+
+/* ==============================
+   🔹 CAMPOS COM MARCADORES (• e ○)
+============================== */
+function habilitarMarcadores(id) {
+  const campo = document.getElementById(id);
+
+  campo.addEventListener("keydown", function (e) {
+    if (e.key === " " || e.code === "Space") {
+      const sel = window.getSelection();
+      const range = sel.getRangeAt(0);
+      const node = range.startContainer;
+      const textoAntes = node.textContent?.substring(0, range.startOffset) || "";
+
+      const linha = getLinhaAtual(range);
+      const conteudoLinha = linha.textContent;
+
+      // =============================
+      // 🔸 SUBNÍVEL (  - )
+      // =============================
+      if (/^\s{2,}-\s?$/.test(conteudoLinha)) {
+        e.preventDefault();
+        linha.textContent = linha.textContent.replace(/^\s*-\s*/, "");
+
+        const marcador = document.createElement("span");
+        marcador.textContent = "○ ";
+        marcador.contentEditable = "false";
+        marcador.style.userSelect = "none";
+        marcador.style.fontSize = "1.3em";
+        marcador.style.lineHeight = "0.8em";
+        marcador.style.verticalAlign = "middle";
+        marcador.style.marginLeft = "20px"; // 🔹 desloca alguns pixels à frente
+        linha.insertBefore(marcador, linha.firstChild);
+
+        const zwsp = document.createTextNode("\u200B");
+        linha.insertBefore(zwsp, marcador.nextSibling);
+
+        const newRange = document.createRange();
+        newRange.setStart(zwsp, 1);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+        return;
+      }
+
+      // =============================
+      // 🔹 MARCADOR NORMAL ( - )
+      // =============================
+      if (/^-\s?$/.test(conteudoLinha.trim())) {
+        e.preventDefault();
+        linha.textContent = linha.textContent.replace(/^\s*-\s*/, "");
+
+        const marcador = document.createElement("span");
+        marcador.textContent = "• ";
+        marcador.contentEditable = "false";
+        marcador.style.userSelect = "none";
+        marcador.style.fontSize = "2em";
+        marcador.style.lineHeight = "0.8em";
+        marcador.style.verticalAlign = "middle";
+        linha.insertBefore(marcador, linha.firstChild);
+
+        const zwsp = document.createTextNode("\u200B");
+        linha.insertBefore(zwsp, marcador.nextSibling);
+
+        const newRange = document.createRange();
+        newRange.setStart(zwsp, 1);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+      }
+    }
+  });
+
+  function getLinhaAtual(range) {
+    let node = range.startContainer;
+    while (node && node !== campo) {
+      if (node.nodeName === "DIV" || node.nodeName === "P") return node;
+      node = node.parentNode;
+    }
+    return campo;
+  }
+}
+
+
+/* ==============================
+   🔹 LINHA DIVISÓRIA (Ctrl + -)
+============================== */
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key === '-') {
+    e.preventDefault();
+
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    const campo = range.startContainer.closest('[contenteditable="true"]');
+
+    // Apenas campos específicos
+    const camposPermitidos = ["campo-habilidades", "notas", "itens", "campo-idolos"];
+    if (!campo || !camposPermitidos.includes(campo.id)) return;
+
+    // cria a linha branca
+    const linha = document.createElement('hr');
+    linha.classList.add('linha-divisoria');
+    linha.style.border = 'none';
+    linha.style.borderTop = '2px solid white';
+    linha.style.margin = '10px 0';
+    linha.style.width = '100%';
+
+    // insere onde o cursor está
+    range.insertNode(linha);
+
+    // move o cursor depois da linha
+    range.setStartAfter(linha);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    // salva o campo
+    salvarTexto(campo.id);
+  }
+});
+
+// aplica nos campos desejados
+["campo-habilidades", "itens", "campo-idolos"].forEach(habilitarMarcadores);
+
+/* ==============================
+   🔹 TROCA DE ABAS
+============================== */
+function trocarAba(abaId) {
+  document.querySelectorAll(".aba").forEach(el => el.classList.remove("ativa"));
+  document.querySelectorAll(".conteudo-aba").forEach(el => el.style.display = "none");
+  document.querySelector(`.aba[onclick*="${abaId}"]`).classList.add("ativa");
+  document.getElementById(abaId).style.display = "block";
+}
+
+/* ==============================
+   🔹 EXECUÇÃO
+============================== */
+document.addEventListener("DOMContentLoaded", carregarDados);
+</script>
