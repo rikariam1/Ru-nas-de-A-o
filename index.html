@@ -521,7 +521,7 @@ body::-webkit-scrollbar {
     }
     .abas {
       position: absolute;
-      top: 1550px;
+      top: 1575px;
       left: 50%;
       transform: translate(-50%);
       font-size: 13px;
@@ -534,7 +534,7 @@ body::-webkit-scrollbar {
   .idolos-container,
   .notas-container {
     position: absolute;
-    top: 1575px;
+    top: 1595px;
     left: 48%;
     transform: translate(-50%);
     width: 90vw;
@@ -565,7 +565,7 @@ body::-webkit-scrollbar {
 }
  .linha-horizontal-2 {
   position: absolute;
-  top: 1520px;
+  top: 1550px;
   width: 100%;
   height: 2px;
   background-color: white;
@@ -795,9 +795,10 @@ body::-webkit-scrollbar {
     }
 
     function salvarTexto(id) {
-      const valor = document.getElementById(id).innerText;
-      db.ref("texto/" + personagemId + "/" + id).set(valor);
-    }
+  const valor = document.getElementById(id).innerHTML; // salva formatação HTML
+  db.ref("texto/" + personagemId + "/" + id).set(valor);
+}
+
 
     function carregarDados() {
       db.ref("imagem/" + personagemId).once("value", snap => {
@@ -812,9 +813,9 @@ body::-webkit-scrollbar {
   
 
 ].forEach(id => {
-  db.ref("texto/" + personagemId + "/" + id).once("value", snap => {
-    if (snap.exists()) document.getElementById(id).innerText = snap.val();
-  });
+db.ref("texto/" + personagemId + "/" + id).once("value", snap => {
+  if (snap.exists()) document.getElementById(id).innerHTML = snap.val(); // restaura o HTML
+});
   document.getElementById(id).addEventListener("input", () => salvarTexto(id));
 });
 
