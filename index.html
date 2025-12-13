@@ -781,6 +781,8 @@ body::-webkit-scrollbar {
   <div class="habilidades-linha">
     <span class="habilidades-titulo">PH</span>
     <div class="campo-editavel pequeno" contenteditable="true" id="info-ph">0/0</div>
+        <span class="habilidades-titulo">FOCO</span>
+    <div class="campo-editavel pequeno" contenteditable="true" id="info-foco">0/0</div>
   </div>
   <div class="campo-editavel grande" contenteditable="true" id="campo-habilidades"><br></div>
 </div>
@@ -840,7 +842,7 @@ function carregarDados() {
   const camposTexto = [
     "edit-vig","edit-agi","edit-for","edit-pre","edit-int",
     "info-nome","info-idade","info-raca","info-lvl","info-mov",
-    "info-ph","campo-habilidades","carga","itens","campo-idolos",
+    "info-ph","info-foco","campo-habilidades","carga","itens","campo-idolos",
     "notas","resistencias","vulnerabilidades","proficiencias"
   ];
 
@@ -1266,3 +1268,4 @@ function trocarAba(abaId) {
 ============================== */
 document.addEventListener("DOMContentLoaded", carregarDados);
 </script>
+
