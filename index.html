@@ -32,17 +32,12 @@ body::-webkit-scrollbar {
 
   .paragrafo {
     margin-top: 0px;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
 
-  .paragrafo .marcador {
-    display: inline-block;
-    vertical-align: top;
-  }
 
-  .paragrafo .subnivel {
-    margin-left: 20px;
-  }
+
+
 
   .paragrafo br {
     line-height: 1.2;
@@ -470,7 +465,20 @@ body::-webkit-scrollbar {
       color: white;
       overflow: auto;
       text-overflow: ellipsis;
-    }
+        /* 🔹 controle de scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* 🔹 esconde scrollbar */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* Edge antigo */
+}
+
+/* Chrome, Edge, Safari, Opera */
+.campo-linha-rv::-webkit-scrollbar {
+  display: none;
+}
+    
     /* Container das abas */
     .abas {
       position: absolute;         /* Define que será posicionado fora do fluxo normal */
@@ -654,7 +662,68 @@ body::-webkit-scrollbar {
     font-size: 18px;
   }
 }
+/* ===== MINI ABA HOVER (ISOLADA) ===== */
+.hover-container {
+  position: relative;
+  display: inline-block;
+  left: 120px;
+}
 
+.mini-aba-hover {
+  position: absolute;
+  top: 70px;
+  left: -68px;
+  padding: 8px;
+  width: 150px;
+  height: 130px;
+  background-color: rgba(47, 52, 55, 0.5);
+  backdrop-filter: blur(6px);
+  border-radius: 6px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 9999;
+}
+
+/* Mostrar no hover */
+.hover-container:hover .mini-aba-hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Imagem da aba */
+.mini-imagem {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+/* Linha dos campos */
+.mini-linha {
+  display: flex;
+   justify-content: center; /* centro */
+  gap: 12px;
+  margin-top: -20px;
+}
+
+/* Campos (bloqueados por padrão) */
+.mini-editavel {
+  flex: 1;
+  color: white;
+  font-size: 25px;
+  min-height: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.35);
+  pointer-events: none;
+  text-align: center;
+}
+
+/* Quando clicar, libera edição */
+.mini-aba-hover.editando .mini-editavel {
+  pointer-events: auto;
+  border-bottom: 1px solid #a88bff;
+}
   </style>
 
   <!-- Firebase SDK -->
@@ -829,6 +898,18 @@ body::-webkit-scrollbar {
   <div class="inventario-linha">
     <span class="inventario-titulo">CARGA</span>
     <div class="campo-editavel pequeno" contenteditable="true" id="carga">0/0</div>
+    <div class="hover-container">
+  <img src="https://i.imgur.com/NkIMxw6.png" width="60">
+
+  <div class="mini-aba-hover" id="miniAbaHover">
+    <img src="https://imgur.com/2QrgC0D.png" class="mini-imagem">
+
+    <div class="mini-linha">
+      <div id="mini1" class="mini-editavel" contenteditable="true">0</div>
+      <div id="mini2" class="mini-editavel" contenteditable="true">0</div>
+    </div>
+  </div>
+</div>
   </div>
   <div class="campo-editavel grande" contenteditable="true" id="itens"><br></div>
 </div>
@@ -878,7 +959,8 @@ function carregarDados() {
     "edit-vig","edit-agi","edit-for","edit-pre","edit-int",
     "info-nome","info-idade","info-raca","info-lvl","info-mov",
     "info-ph","info-foco","campo-habilidades","carga","itens","campo-idolos",
-    "notas","resistencias","vulnerabilidades","proficiencias"
+    "notas","resistencias","vulnerabilidades","proficiencias","mini1",
+    "mini2"
   ];
 
   camposTexto.forEach(id => {
@@ -1359,11 +1441,19 @@ function transformarEmParagrafos(campo) {
     }
   });
 }
+  const miniAba = document.getElementById("miniAbaHover");
 
+  // Clique dentro da aba → libera edição
+  miniAba.addEventListener("click", (e) => {
+    e.stopPropagation();
+    miniAba.classList.add("editando");
+  });
+
+  // Clique fora → bloqueia novamente
+  document.addEventListener("click", () => {
+    miniAba.classList.remove("editando");
+  });
 
 </script>
-
-
-
 
 
