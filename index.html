@@ -666,13 +666,20 @@ body::-webkit-scrollbar {
 .hover-container {
   position: relative;
   display: inline-block;
-  left: 120px;
+  left: 150px;
+  top: 0px;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.hover-container:hover {
+  transform: scale(1.08);
 }
 
 .mini-aba-hover {
   position: absolute;
-  top: 70px;
-  left: -68px;
+  top: 50px;
+  left: -100px;
   padding: 8px;
   width: 150px;
   height: 130px;
@@ -724,6 +731,49 @@ body::-webkit-scrollbar {
   pointer-events: auto;
   border-bottom: 1px solid #a88bff;
 }
+        /* Imagem com pop */
+        .pop-image {
+            width: 40px;
+            cursor: pointer;
+            transition: transform 0.25s ease;
+            position: absolute;
+            top: -5px;
+            left: 320px;
+        }
+        .pop-image:hover {
+            transform: scale(1.08);
+        }
+
+        /* Overlay */
+        #modalOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container invisível */
+        #modalContent {
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        /* Área editável (única coisa visível) */
+        textarea {
+            width: 620px;
+            height: 320px;
+            background: #2e2e2e; /* cinza escuro estilo Notion */
+            color: #fff;
+            font-size: 16px;
+            padding: 16px;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            resize: vertical;
+        }
   </style>
 
   <!-- Firebase SDK -->
@@ -888,6 +938,17 @@ body::-webkit-scrollbar {
         <span class="habilidades-titulo">FOCO</span>
     <div class="campo-editavel pequeno" contenteditable="true" id="info-foco">0/0</div>
   </div>
+    <img
+        src="https://i.imgur.com/LPMise3.png"
+        class="pop-image"
+        id="openModalBtn"
+    >
+
+    <div id="modalOverlay" onclick="closeModal()">
+        <div id="modalContent" onclick="event.stopPropagation()">
+            <textarea contenteditable="true">Escreva aqui...</textarea>
+        </div>
+    </div>
   <div class="campo-editavel grande" contenteditable="true" id="campo-habilidades"><br></div>
 </div>
 
@@ -899,7 +960,7 @@ body::-webkit-scrollbar {
     <span class="inventario-titulo">CARGA</span>
     <div class="campo-editavel pequeno" contenteditable="true" id="carga">0/0</div>
     <div class="hover-container">
-  <img src="https://i.imgur.com/NkIMxw6.png" width="60">
+  <img src="https://i.imgur.com/NkIMxw6.png" width="45">
 
   <div class="mini-aba-hover" id="miniAbaHover">
     <img src="https://imgur.com/2QrgC0D.png" class="mini-imagem">
@@ -1453,7 +1514,12 @@ function transformarEmParagrafos(campo) {
   document.addEventListener("click", () => {
     miniAba.classList.remove("editando");
   });
+      const modal = document.getElementById("modalOverlay");
+        const btn = document.getElementById("openModalBtn");
 
+        btn.onclick = () => modal.style.display = "flex";
+        function closeModal() {
+            modal.style.display = "none";
+        }
 </script>
-
 
