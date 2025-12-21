@@ -25,6 +25,29 @@ html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none; /* Chrome, Edge, Safari, Opera */
 }
+/* Espaçamento padrão de linha */
+[contenteditable="true"] {
+  line-height: 1.4;
+}
+
+  .paragrafo {
+    margin-top: 0px;
+    margin-bottom: 8px;
+  }
+
+  .paragrafo .marcador {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .paragrafo .subnivel {
+    margin-left: 20px;
+  }
+
+  .paragrafo br {
+    line-height: 1.2;
+  }
+
     
 .circulos-wrapper {
   position: absolute;
@@ -326,6 +349,8 @@ body::-webkit-scrollbar {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      overflow-y: auto;
+      scrollbar-width: none; 
     }
     .habilidades-linha {
       display: flex;
@@ -362,7 +387,9 @@ body::-webkit-scrollbar {
       overflow-wrap: break-word;
       text-align: left;
       line-height: 1.2;
-      display: block;          /* OU inline-block */
+      display: block; 
+      overflow-y: auto;
+      scrollbar-width: none; /* OU inline-block */
     }
     .container-pericias {
       position: absolute;
@@ -370,6 +397,8 @@ body::-webkit-scrollbar {
       left: 85px; /* ajuste como quiser */
       width: 320px;
       height: 585px;
+      overflow-y: auto;
+      scrollbar-width: none; 
     }
     .lista-pericias-completa {
       position: absolute;
@@ -482,6 +511,8 @@ body::-webkit-scrollbar {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      overflow-y: auto;
+      scrollbar-width: none; 
     }
     .inventario-linha {
       display: flex;
@@ -501,7 +532,9 @@ body::-webkit-scrollbar {
       left: 1100px;
       display: flex;
       flex-direction: column;
-      gap: 10px; 
+      gap: 10px;
+      overflow-y: auto;
+      scrollbar-width: none; 
     }
     .notas-container {
       margin-top: 20px;
@@ -511,6 +544,8 @@ body::-webkit-scrollbar {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      overflow-y: auto;
+      scrollbar-width: none; 
     }
     @media screen and (max-width: 768px) {
   .container {
@@ -706,7 +741,7 @@ body::-webkit-scrollbar {
   </div>
 
   <div class="bloco-barra">
-    <div class="bar-title sanidade">SANIDADE</div>
+    <div class="bar-title sanidade">DETERMINAÇÃO</div>
     <div class="bar-container">
       <div class="positive-bar" id="sanidade-excesso"></div> <!-- excesso -->
       <div class="bar sanidade" id="sanidade-bar"></div>
@@ -1128,87 +1163,101 @@ function changeBar(tipo, amount) {
   updateBar(tipo, input.value);
 }
 
-/* ==============================
-   🔹 CAMPOS COM MARCADORES (• e ○)
-============================== */
-function habilitarMarcadores(id) {
-  const campo = document.getElementById(id);
+function habilitarMarcadores(containerId) {
+  const container = document.getElementById(containerId);
 
-  campo.addEventListener("keydown", function (e) {
-    if (e.key === " " || e.code === "Space") {
-      const sel = window.getSelection();
-      const range = sel.getRangeAt(0);
-      const node = range.startContainer;
-      const textoAntes = node.textContent?.substring(0, range.startOffset) || "";
+  container.addEventListener("beforeinput", function (e) {
+    if (e.inputType !== "insertText" || e.data !== " ") return;
 
-      const linha = getLinhaAtual(range);
-      const conteudoLinha = linha.textContent;
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
 
-      // =============================
-      // 🔸 SUBNÍVEL (  - )
-      // =============================
-      if (/^\s{2,}-\s?$/.test(conteudoLinha)) {
-        e.preventDefault();
-        linha.textContent = linha.textContent.replace(/^\s*-\s*/, "");
+    const range = sel.getRangeAt(0);
+    const bloco = getBlocoAtual(range, container);
+    if (!bloco) return;
 
-        const marcador = document.createElement("span");
-        marcador.textContent = "○ ";
-        marcador.contentEditable = "false";
-        marcador.style.userSelect = "none";
-        marcador.style.fontSize = "1.3em";
-        marcador.style.lineHeight = "0.8em";
-        marcador.style.verticalAlign = "middle";
-        marcador.style.marginLeft = "20px"; // 🔹 desloca alguns pixels à frente
-        linha.insertBefore(marcador, linha.firstChild);
+    const textoAntes = getTextoAntesDoCursor(bloco, range);
 
-        const zwsp = document.createTextNode("\u200B");
-        linha.insertBefore(zwsp, marcador.nextSibling);
+    // Subnível (  - )
+    if (/^\s{2,}-\s*$/.test(textoAntes)) {
+      e.preventDefault();
+      limparTextoAntes(range);
+      aplicarMarcador(bloco, "○", true);
+      return;
+    }
 
-        const newRange = document.createRange();
-        newRange.setStart(zwsp, 1);
-        newRange.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(newRange);
-        return;
-      }
-
-      // =============================
-      // 🔹 MARCADOR NORMAL ( - )
-      // =============================
-      if (/^-\s?$/.test(conteudoLinha.trim())) {
-        e.preventDefault();
-        linha.textContent = linha.textContent.replace(/^\s*-\s*/, "");
-
-        const marcador = document.createElement("span");
-        marcador.textContent = "• ";
-        marcador.contentEditable = "false";
-        marcador.style.userSelect = "none";
-        marcador.style.fontSize = "2em";
-        marcador.style.lineHeight = "0.8em";
-        marcador.style.verticalAlign = "middle";
-        linha.insertBefore(marcador, linha.firstChild);
-
-        const zwsp = document.createTextNode("\u200B");
-        linha.insertBefore(zwsp, marcador.nextSibling);
-
-        const newRange = document.createRange();
-        newRange.setStart(zwsp, 1);
-        newRange.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(newRange);
-      }
+    // Marcador normal ( - )
+    if (/^\s*-\s*$/.test(textoAntes)) {
+      e.preventDefault();
+      limparTextoAntes(range);
+      aplicarMarcador(bloco, "•");
     }
   });
 
-  function getLinhaAtual(range) {
+  function aplicarMarcador(bloco, simbolo, subnivel = false) {
+    // remove marcador antigo se existir
+    const antigo = bloco.querySelector(".marcador");
+    if (antigo) antigo.remove();
+
+    const marcador = document.createElement("span");
+    marcador.className = "marcador";
+    marcador.textContent = simbolo + " ";
+    marcador.contentEditable = "false";
+    marcador.style.userSelect = "none";
+    marcador.style.fontSize = subnivel ? "1.3em" : "2em";
+    marcador.style.lineHeight = "0.8em";
+    marcador.style.verticalAlign = "middle";
+    if (subnivel) marcador.style.marginLeft = "20px";
+
+    const zwsp = document.createTextNode("\u200B");
+    bloco.insertBefore(marcador, bloco.firstChild);
+    bloco.insertBefore(zwsp, marcador.nextSibling);
+
+    // coloca cursor depois do marcador
+    const sel = window.getSelection();
+    const r = document.createRange();
+    r.setStart(zwsp, 1);
+    r.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+
+  function limparTextoAntes(range) {
+    if (range.startContainer.nodeType === 3) {
+      range.startContainer.textContent =
+        range.startContainer.textContent.slice(range.startOffset);
+    }
+  }
+
+  function getTextoAntesDoCursor(bloco, range) {
+    let texto = "";
+    const walker = document.createTreeWalker(bloco, NodeFilter.SHOW_TEXT, null);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node === range.startContainer) {
+        texto += node.textContent.slice(0, range.startOffset);
+        break;
+      } else {
+        texto += node.textContent;
+      }
+    }
+    return texto.replace(/\u200B/g, "");
+  }
+
+  function getBlocoAtual(range, container) {
+    // Se o cursor estiver diretamente no container, retorna ele
     let node = range.startContainer;
-    while (node && node !== campo) {
-      if (node.nodeName === "DIV" || node.nodeName === "P") return node;
+    while (node && node !== container) {
+      if (node.nodeType === 1) return node;
       node = node.parentNode;
     }
-    return campo;
+    return container; // retorna container como fallback
   }
 }
+
+// aplica em todos os containers
+["campo-habilidades", "itens", "campo-idolos", "notas"].forEach(habilitarMarcadores);
+
 
 
 /* ==============================
@@ -1267,5 +1316,51 @@ function trocarAba(abaId) {
    🔹 EXECUÇÃO
 ============================== */
 document.addEventListener("DOMContentLoaded", carregarDados);
+document.addEventListener("paste", function (e) {
+  const target = e.target;
+
+  if (target.isContentEditable) {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData("text/plain");
+    document.execCommand("insertText", false, text);
+  }
+});
+// Containers que devem usar parágrafos
+const containers = ["campo-habilidades", "itens", "campo-idolos", "notas"];
+
+containers.forEach(id => {
+  const campo = document.getElementById(id);
+
+  // Quando o campo ganhar foco, transforma qualquer texto solto em parágrafos
+  campo.addEventListener("focus", () => {
+    transformarEmParagrafos(campo);
+  });
+
+  // Quando o usuário digitar ou colar
+  campo.addEventListener("input", () => {
+    transformarEmParagrafos(campo);
+  });
+});
+
+// Função que envolve tudo em div.paragrafo
+function transformarEmParagrafos(campo) {
+  const nodes = Array.from(campo.childNodes);
+
+  nodes.forEach(node => {
+    // Se já for parágrafo, ignora
+    if (node.nodeType === 1 && node.classList.contains("paragrafo")) return;
+
+    // Se for texto, cria parágrafo
+    if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName !== "DIV")) {
+      const p = document.createElement("div");
+      p.className = "paragrafo";
+      p.innerHTML = node.textContent || node.innerHTML;
+      campo.replaceChild(p, node);
+    }
+  });
+}
+
+
 </script>
+
 
