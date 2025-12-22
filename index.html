@@ -170,9 +170,17 @@ body::-webkit-scrollbar {
       height: 30px;
       background-color: #191919;
       border: 2px solid #fff;
-      overflow: hidden;
-      position: relative; /* mantém a estrutura */
+      overflow: hidden; /* MUITO IMPORTANTE */
+      position: relative;
+  transition: transform 0.2s ease;/
     }
+    .bar-container.hp-warning {
+  animation: hp-pop-warning 1.6s ease-in-out infinite;
+}
+
+.bar-container.hp-critical {
+  animation: hp-pop-critical 0.9s ease-in-out infinite;
+}
     /* Barras de vida, alma e sanidade */
     .bar, .negative-hp-bar {
       height: 100%;
@@ -801,6 +809,36 @@ body::-webkit-scrollbar {
     overflow-y: auto;
     white-space: pre-wrap;
 }
+@keyframes hp-pop-warning {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 140, 0, 0);
+  }
+  40% {
+    transform: scale(1.02);
+    box-shadow: 0 0 14px rgba(255, 0, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 140, 0, 0);
+  }
+}
+
+@keyframes hp-pop-critical {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+  }
+  35% {
+    transform: scale(1.04);
+    box-shadow: 0 0 22px rgba(255, 0, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
+
   </style>
 
   <!-- Firebase SDK -->
@@ -1155,6 +1193,7 @@ function updateHP(value, salvar = true) {
   let extra = parseInt(match[3]) || 0;
 
   const bar = document.getElementById("hp-bar");
+  const container = bar.closest(".bar-container");
   const negative = document.getElementById("negative-hp-bar");
   const excesso = document.getElementById("hp-excesso");
   const input = document.getElementById("hp-input");
@@ -1170,6 +1209,16 @@ function updateHP(value, salvar = true) {
   // porcentagem base (barra vermelha)
   const perc = (current / max) * 100;
   bar.style.width = Math.max(0, perc) + "%";
+  container.classList.remove("hp-warning", "hp-critical");
+
+if (current > 0) {
+  if (perc <= 25) {
+    container.classList.add("hp-critical");
+  } else if (perc <= 50) {
+    container.classList.add("hp-warning");
+  }
+}
+
 
   // barra negativa (hp abaixo de 0)
   const negPerc = current < 0 ? Math.min(100, (-current / maxNeg) * 100) : 0;
