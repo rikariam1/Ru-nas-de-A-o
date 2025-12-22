@@ -745,14 +745,15 @@ body::-webkit-scrollbar {
         }
 
         /* Overlay */
-        #modalOverlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            justify-content: center;
-            align-items: center;
-        }
+ #modalOverlay {
+    display: none; /* 🔥 ESSENCIAL */
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+}
 
         /* Container invisível */
         #modalContent {
@@ -773,7 +774,33 @@ body::-webkit-scrollbar {
             outline: none;
             border-radius: 8px;
             resize: vertical;
+
+              overflow-y: auto;
+
+    /* 🔥 esconder scrollbar */
+    scrollbar-width: none;          /* Firefox */
+    -ms-overflow-style: none;       /* IE / Edge antigo */
+}
+
+/* Chrome, Edge, Safari */
+.textarea::-webkit-scrollbar {
+    display: none;
         }
+        .textarea {
+    width: 620px;
+    height: 320px;
+    background: #2e2e2e; /* cinza escuro estilo Notion */
+    color: #fff;
+    font-size: 16px;
+    padding: 16px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    resize: vertical;
+
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
   </style>
 
   <!-- Firebase SDK -->
@@ -899,6 +926,7 @@ body::-webkit-scrollbar {
     <div class="linha-pericia"><span class="pericia">Atletismo</span><span class="atributo">(FOR)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-atletismo"></div></div>
     <div class="linha-pericia"><span class="pericia">Bloqueio</span><span class="atributo">(FOR)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-bloqueio"></div></div>
     <div class="linha-pericia"><span class="pericia">Canalização</span><span class="atributo">(PRE)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-canalizacao"></div></div>
+    <div class="linha-pericia"><span class="pericia">Ciências</span><span class="atributo">(INT)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-ciencias"></div></div>
     <div class="linha-pericia"><span class="pericia">Combate</span><span class="atributo">(FOR)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-combate"></div></div>
     <div class="linha-pericia"><span class="pericia">Condução</span><span class="atributo">(AGI)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-conducao"></div></div>
     <div class="linha-pericia"><span class="pericia">Enganação</span><span class="atributo">(PRE)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-enganacao"></div></div>
@@ -916,6 +944,7 @@ body::-webkit-scrollbar {
     <div class="linha-pericia"><span class="pericia">Percepção</span><span class="atributo">(PRE)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-precisao"></div></div>
     <div class="linha-pericia"><span class="pericia">Religião</span><span class="atributo">(INT)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-religiao"></div></div>
     <div class="linha-pericia"><span class="pericia">Sobrevivência</span><span class="atributo">(INT)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-sobrevivencia"></div></div>
+    <div class="linha-pericia"><span class="pericia">Tática</span><span class="atributo">(INT)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-tatica"></div></div>
     <div class="linha-pericia"><span class="pericia">Tecnologia</span><span class="atributo">(INT)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-tecnologia"></div></div>
     <div class="linha-pericia"><span class="pericia">Vontade</span><span class="atributo">(PRE)</span><div class="campo-editavel-linha" contenteditable="true" id="pericia-vontade"></div></div>
   </div>
@@ -946,7 +975,9 @@ body::-webkit-scrollbar {
 
     <div id="modalOverlay" onclick="closeModal()">
         <div id="modalContent" onclick="event.stopPropagation()">
-            <textarea contenteditable="true">Escreva aqui...</textarea>
+            <div class="textarea" contenteditable="true" id="Avore da alma" spellcheck="false">
+    Árvore da Alma
+</div>
         </div>
     </div>
   <div class="campo-editavel grande" contenteditable="true" id="campo-habilidades"><br></div>
@@ -1021,7 +1052,7 @@ function carregarDados() {
     "info-nome","info-idade","info-raca","info-lvl","info-mov",
     "info-ph","info-foco","campo-habilidades","carga","itens","campo-idolos",
     "notas","resistencias","vulnerabilidades","proficiencias","mini1",
-    "mini2"
+    "mini2", "Avore da alma"
   ];
 
   camposTexto.forEach(id => {
@@ -1066,7 +1097,7 @@ const idsPericias = [
   "pericia-conducao","pericia-enganacao","pericia-esquiva","pericia-fortitude","pericia-furtividade",
   "pericia-iniciativa","pericia-intimidacao","pericia-intuicao","pericia-investigacao","pericia-medicina",
   "pericia-oficio","pericia-precisao","pericia-percepcao","pericia-religiao","pericia-sobrevivencia",
-  "pericia-tecnologia","pericia-vontade","pericia-ladinagem"
+  "pericia-tecnologia","pericia-vontade","pericia-ladinagem","pericia-tatica", "pericia-ciencias"
 ];
 
 function salvarPericia(id) {
