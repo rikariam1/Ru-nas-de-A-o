@@ -838,6 +838,129 @@ body::-webkit-scrollbar {
     box-shadow: 0 0 0 rgba(255, 0, 0, 0);
   }
 }
+.alma-particles {
+  position: absolute;
+  top: 28px; /* altura da barra */
+  left: 0;
+  width: 300px;
+  height: 0px;
+  pointer-events: none;
+  overflow: visible;
+}
+.alma-particle {
+  position: absolute;
+  bottom: 0;
+  width: 5px;
+  height: 5px;
+  background: rgba(120, 200, 255, 0.8);
+  border-radius: 50%;
+  animation: alma-float 2.8s ease-out forwards;
+}
+@keyframes alma-float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-30px) scale(0.4);
+    opacity: 0;
+  }
+}
+.bar.alma.critica {
+  background-color: rgb(25, 90, 160);
+}
+/* Animação de Sanidade substituindo Alma */
+#sanidade-bar.alma-substituta {
+  animation: sanidade-alma-shift 8s ease-in-out infinite;
+}
+
+@keyframes sanidade-alma-shift {
+  0% {
+    background-color: rgb(103, 1, 171); /* roxo */
+  }
+  50% {
+    background-color: rgb(45, 168, 255); /* azul da alma */
+  }
+  100% {
+    background-color: rgb(103, 1, 171); /* roxo */
+  }
+}
+/* Container para raízes/tentáculos */
+.hp-roots-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 300px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 0;
+}
+
+.hp-root {
+  position: absolute;
+  bottom: 0;
+  width: 5px;
+  background: black;
+  border-radius: 7px;
+  transform-origin: bottom center;
+  animation: root-sway 8s ease-in-out infinite;
+}
+
+.hp-root .branch {
+  position: absolute;
+  bottom: 50%;
+  width: 6px;
+  height: 50%;
+  background: black;
+  border-radius: 4px;
+  transform-origin: bottom center;
+  animation: branch-sway 8s ease-in-out infinite;
+}
+
+@keyframes root-sway {
+  0% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  100% { transform: rotate(-5deg); }
+}
+
+@keyframes branch-sway {
+  0% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  100% { transform: rotate(-15deg); }
+}
+
+/* Partículas externas */
+#hp-particles-container {
+  position: absolute;
+  top: -150px;
+  left: -50px;
+  width: calc(60% + 100px);
+  height: 180px;
+  left: 0px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+
+.hp-particle {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.7);
+  animation: particle-move 6s linear infinite;
+}
+
+@keyframes particle-move {
+  0% { transform: translate(0,0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: translate(5px, -30px) scale(0.7); }
+  100% { transform: translate(-5px, -80px) scale(0.5); opacity: 0; }
+}
+
 
   </style>
 
@@ -899,6 +1022,7 @@ body::-webkit-scrollbar {
   <div class="bloco-barra">
     <div class="bar-title vida">VIDA</div>
     <div class="bar-container">
+      <div id="hp-roots-container" class="hp-roots-container"></div>
       <div class="negative-hp-bar" id="negative-hp-bar"></div>
       <div class="positive-bar" id="hp-excesso"></div> <!-- excesso -->
       <div class="bar hp" id="hp-bar"></div>
@@ -909,6 +1033,7 @@ body::-webkit-scrollbar {
       <input type="text" id="hp-input" class="bar-input" value="0/0" oninput="updateHP(this.value)" />
       <div class="dead-message" id="dead-message">MORTO</div>
     </div>
+    <div id="hp-particles-container"></div>
   </div>
 
   <div class="bloco-barra">
@@ -922,6 +1047,7 @@ body::-webkit-scrollbar {
       <div class="arrow right-double" onclick="changeBar('alma', 5)">»</div>
       <input type="text" id="alma-input" class="bar-input" value="0/0" oninput="updateBar('alma', this.value)" />
     </div>
+    <div class="alma-particles"></div>
   </div>
 
   <div class="bloco-barra">
@@ -1240,7 +1366,86 @@ if (current > 0) {
     dead.style.display = "none";
     input.style.opacity = "1";
   }
+atualizarRaizesHP(current);
+function atualizarRaizesHP(hpAtual) {
+  const rootsContainer = document.getElementById("hp-roots-container");
+  const particlesContainer = document.getElementById("hp-particles-container");
+
+  rootsContainer.innerHTML = "";
+  particlesContainer.innerHTML = "";
+
+  if (hpAtual > 0) return;
+
+  const numRaizes = 15;
+  const alturaMax = 150;
+
+  // Criar raízes principais com ramificações
+  for (let i = 0; i < numRaizes; i++) {
+    const root = document.createElement("div");
+    root.classList.add("hp-root");
+    root.style.height = alturaMax + Math.random() * 100 + "px";
+    root.style.left = `${(i / numRaizes) * 100}%`;
+    root.style.transform = `rotate(${(Math.random() - 0.5) * 400}deg)`;
+
+    const numBranches = 1 + Math.floor(Math.random() * 3);
+    for (let b = 0; b < numBranches; b++) {
+      const branch = document.createElement("div");
+      branch.classList.add("branch");
+      branch.style.bottom = 20 + Math.random() * 60 + "%";
+      branch.style.transform = `rotate(${(Math.random() - 0.5) * 90}deg)`;
+      root.appendChild(branch);
+    }
+
+    rootsContainer.appendChild(root);
+  }
+
+  // Criar partículas externas
+  const numParticulas = 60;
+  for (let i = 0; i < numParticulas; i++) {
+    const particle = document.createElement("div");
+    particle.classList.add("hp-particle");
+    particle.style.left = `${Math.random() * 120 - 10}%`;
+    particle.style.bottom = `${Math.random() * 50 - 50}px`;
+    
+    particlesContainer.appendChild(particle);
+  }
 }
+
+}
+
+/* ==============================
+   🔹 EFEITOS VISUAIS — ALMA
+============================== */
+let almaParticleInterval = null;
+function criarParticulaAlma() {
+  const container = document.querySelector(".alma-particles");
+  if (!container) return;
+
+  const p = document.createElement("div");
+  p.className = "alma-particle";
+
+  p.style.left = Math.random() * 100 + "%";
+  p.style.animationDuration = (3 + Math.random()).toFixed(2) + "s";
+
+  container.appendChild(p);
+
+  setTimeout(() => p.remove(), 3000);
+}
+function verificarSubstituicaoAlma() {
+  const almaInput = document.getElementById("alma-input").value;
+  const sanidadeBar = document.getElementById("sanidade-bar");
+
+  const [almaAtual] = almaInput.split("/").map(Number);
+
+  if (almaAtual <= 0) {
+    sanidadeBar.classList.add("alma-substituta");
+  } else {
+    sanidadeBar.classList.remove("alma-substituta");
+    sanidadeBar.style.backgroundColor = "rgb(103, 1, 171)"; // volta ao normal
+  }
+}
+
+
 
 /* ==============================
    🔹 OUTRAS BARRAS (Alma, Sanidade, etc)
@@ -1268,6 +1473,31 @@ function updateBar(tipo, value, salvar = true) {
 
   bar.style.width = basePerc + "%";
   excesso.style.width = Math.min(excessoPerc, 100) + "%";
+  // ===== EFEITO VISUAL DE ALMA =====
+if (tipo === "alma") {
+  const porcentagem = (current / max) * 100;
+  const barAlma = document.getElementById("alma-bar");
+
+  if (porcentagem > 50) {
+    barAlma.classList.remove("critica");
+
+    if (!almaParticleInterval) {
+      almaParticleInterval = setInterval(criarParticulaAlma, 300);
+    }
+  } else {
+    barAlma.classList.add("critica");
+
+    if (almaParticleInterval) {
+      clearInterval(almaParticleInterval);
+      almaParticleInterval = null;
+    }
+  }
+  if (tipo === "alma") {
+  verificarSubstituicaoAlma();
+}
+
+}
+
 }
 
 /* ==============================
