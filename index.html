@@ -53,14 +53,13 @@ body::-webkit-scrollbar {
 }
 
 .circulo-principal {
-  width: 350px;
-  height: 350px;
-  border: 6px solid white;
-  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  border: 3px solid white;
   background-color: transparent;
   position: absolute;
-  left: 0px;
-  top: 0px;
+  left: -470px;
+  top: 190px;
   overflow: hidden;
   z-index: 1;
 }
@@ -68,7 +67,10 @@ body::-webkit-scrollbar {
 .circulo-principal img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  display: flex;
+  object-position: center;
+  object-fit: cover;
+
 }
 
 /* Pequenos */
@@ -119,28 +121,28 @@ body::-webkit-scrollbar {
 
 /* POSICIONAMENTO EM VOLTA DO CÍRCULO */
 .centro {
-  top: 92%;
-  left: 50%;
+  top: 370px;
+  left: -125px;
   transform: translate(-50%);
 }
 .direita {
-  top: 77%;
-  left: 86%;
+  top: 470px;
+  left: -125px;
   transform: translate(-50%);
 }
 .direita-cima {
-  top: 40%;
-  left: 100%;
+  top: 570px;
+  left: -125px;
   transform: translate(-50%);
 }
 .esquerda {
-  top: 77%;
-  left: 14%;
+  top: 270px;
+  left: -125px;
   transform: translate(-50%);
 }
 .esquerda-cima {
-  top: 40%;
-  left: 0%;
+  top: 170px;
+  left: -125px;
   transform: translate(-50%);
 }
 
@@ -148,7 +150,7 @@ body::-webkit-scrollbar {
     .barras-container {
       position: absolute; /* ou fixed, se quiser que fique fixo mesmo rolando */
       top: 425px;
-      left: 600px;
+      left: 50px;
       display: flex;
       flex-direction: column;
     }
@@ -344,17 +346,20 @@ body::-webkit-scrollbar {
       justify-content: center;
       font-weight: normal;
     }
-    .habilidades-container {
-      margin-top: 20px;
-      position: absolute;
-      top: 5%;
-      left: 1100px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      scrollbar-width: none; 
-    }
+.habilidades-container {
+  position: absolute;
+  top: 8%;
+  left: 1100px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 370px; /* mesma largura que #campo-habilidades tinha */
+  height: 88vh; /* ou a altura que quiser */
+  overflow-y: auto; /* rolagem vertical se houver muitas habilidades */
+}
+
     .habilidades-linha {
       display: flex;
       align-items: center;
@@ -396,23 +401,21 @@ body::-webkit-scrollbar {
     }
     .container-pericias {
       position: absolute;
-      top: 180px;  /* ajuste como quiser */
-      left: 85px; /* ajuste como quiser */
+      top: 0px;  /* ajuste como quiser */
+      left: 630px; /* ajuste como quiser */
       width: 320px;
-      height: 585px;
+      height: 750px;
       overflow-y: auto;
       scrollbar-width: none; 
     }
     .lista-pericias-completa {
-      position: absolute;
-      top: 45px;
-      left: 0px;
+
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 7px;
       z-index: 2;
       color: white;
-      font-size: 13px;
+      font-size: 15px;
     }
     .linha-pericia {
       display: flex;
@@ -445,7 +448,7 @@ body::-webkit-scrollbar {
     .resistencias-vulnerabilidades {
       position: absolute;
       top: 675px;
-      left: 500px;
+      left: 25px;
       display: flex;
       flex-direction: column;
       color: white;
@@ -674,10 +677,11 @@ body::-webkit-scrollbar {
 .hover-container {
   position: relative;
   display: inline-block;
-  left: 150px;
+  left: 0px;
   top: 0px;
   cursor: pointer;
   transition: transform 0.25s ease;
+  z-index: 999;
 }
 
 .hover-container:hover {
@@ -962,6 +966,375 @@ body::-webkit-scrollbar {
 }
 
 
+
+.buff-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: absolute;
+  left: 1030px;
+  top: 50px;
+}
+
+.buff-toggle img {
+  width: 48px;
+  height: auto;
+  opacity: 0.8;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.buff-toggle:hover img {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.buff-toggle.ativo img {
+  filter: drop-shadow(0 0 6px rgba(180, 120, 255, 0.8));
+  opacity: 1;
+}
+
+
+
+/* ===== CONTAINER ===== */
+.habilidades-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+    overflow-y: auto; /* mantém a rolagem */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE e Edge antigos */
+}
+
+/* Chrome, Edge, Safari */
+.habilidades-container::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ===== BOTÃO ===== */
+.btn-add-habilidade {
+  background: none;
+  border: 1px dashed #555;
+  color: #bbb;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* ===== CARD ===== */
+.card-habilidade {
+  background: linear-gradient(180deg, #1f2023, #16171a);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  margin-bottom: 6px;
+}
+/* ===== TEXTO BRANCO NO CARD ===== */
+.card-habilidade {
+  color: #ffffff;
+}
+
+.card-habilidade .card-nome {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.card-habilidade .card-desc {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+
+.card-habilidade .badge {
+  color: #ffffff;
+}
+
+.card-habilidade .card-acao {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.card-habilidade .card-acao:hover {
+  color: #ffffff;
+}
+
+
+/* 🔴 CARD ATIVO (PD) */
+.card-habilidade.pd {
+  background: linear-gradient(
+    135deg,
+    #c23a3a 0%,
+    #6e1b1b 30%,
+    #191919 60%,
+    #191919 100%
+  );
+  border: 1px solid #c23a3a;
+}
+
+/* 🟢 CARD PASSIVA */
+.card-habilidade.passiva {
+  background: linear-gradient(
+    135deg,
+    #3ac27a 0%,
+    #1b6e45 30%,
+    #191919 60%,
+    #191919 100%
+  );
+  border: 1px solid #1fa88c;
+}
+
+/* topo */
+.card-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+/* nome */
+.card-nome {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* descrição */
+.card-desc {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* ===== BADGES ===== */
+.badge {
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* PD - vermelho */
+.badge-pd {
+  background: linear-gradient(135deg, #6e1b1b, #c23a3a);
+  color: #fff;
+}
+
+/* PASSIVA - verde */
+.badge-passiva {
+  background: linear-gradient(135deg, #1b6e45, #3ac27a);
+  color: #fff;
+}
+
+/* ===== AÇÕES (EDITAR / EXCLUIR) ===== */
+.card-acoes {
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.card-habilidade:hover .card-acoes {
+  opacity: 1;
+}
+
+.card-acao {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.card-acao:hover {
+  color: #fff;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-habilidade {
+  background: #1c1d20;
+  border-radius: 10px;
+  padding: 15px;
+  width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-habilidade input,
+.modal-habilidade textarea {
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.modal-habilidade textarea {
+  resize: none;
+  height: 80px;
+}
+
+.btn-salvar {
+  background: linear-gradient(135deg, #5a2d82, #8f3fd1);
+  border: none;
+  padding: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+/* badge no canto superior direito */
+.card-habilidade .badge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
+/* ações no canto inferior direito */
+.card-acoes {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.card-habilidade:hover .card-acoes {
+  opacity: 1;
+}
+#campo-habilidades,
+#campo-habilidades-ativo {
+  display: none !important;
+}
+
+
+/* 🟡 EVOLUÇÃO */
+.card-habilidade.evolucao {
+  background: linear-gradient(
+    135deg,
+    #d6b45a 0%,
+    #a3872f 25%,
+    #191919 75%
+  );
+  border: 1px solid #a3872f;
+}
+
+/* ⚪ RAÇA */
+.card-habilidade.raca {
+  background: linear-gradient(
+    135deg,
+    #bdbdbd 0%,
+    #7a7a7a 25%,
+    #191919 75%
+  );
+  border: 1px solid #7a7a7a;
+}
+.card-item {
+  background: linear-gradient(135deg, #3a3a3a 20%, #191919 80%);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  color: white;
+  margin-bottom: 6px;
+  border: 1px solid #7a7a7a ; /* 👈 ADICIONE ISTO */
+}
+
+.card-item.tesouro {
+  background: linear-gradient(135deg, #d4af37 20%, #191919 80%);
+}
+
+.item-acoes {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+}
+
+.card-item:hover .item-acoes {
+  opacity: 1;
+}
+.lista-habilidades:empty {
+  display: none;
+}
+.item-topo {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.item-espaco {
+  opacity: 0.8;
+}
+
+.item-info {
+  font-size: 0.9em;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.item-desc {
+  margin-top: 6px;
+  font-size: 0.95em;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+.item-desc[style*="display: block"] {
+  max-height: 500px; /* ou um valor grande suficiente */
+  opacity: 1;
+}
+
+.item-desc[style*="display: none"] {
+  max-height: 0;
+  opacity: 0;
+}
+#itens {
+  display: none;
+}
+.conteudo-aba {
+  display: none;         /* esconde todas por padrão */
+}
+
+.card-habilidade,
+.card-item {
+  cursor: grab;
+}
+
+.card-habilidade:active,
+.card-item:active {
+  cursor: grabbing;
+  z-index: 999;
+}
+#lista-itens,
+#lista-habilidades,
+#lista-habilidades-ativo {
+  position: relative;
+}
+.card-item:hover .card-acoes {
+  opacity: 1;
+}
+.item-municao {
+  cursor: pointer;
+}
+
   </style>
 
   <!-- Firebase SDK -->
@@ -1131,6 +1504,44 @@ body::-webkit-scrollbar {
         <span class="habilidades-titulo">FOCO</span>
     <div class="campo-editavel pequeno" contenteditable="true" id="info-foco">0/0</div>
   </div>
+  <!-- 🔹 BOTÃO DE ADICIONAR -->
+<button class="btn-add-habilidade" onclick="abrirModalNovaHabilidade()">
+  + ADICIONAR HABILIDADE
+</button>
+
+<!-- 🔹 LISTA DE HABILIDADES -->
+<div id="lista-habilidades" class="lista-habilidades"></div>
+<div id="lista-habilidades-ativo" class="lista-habilidades" style="display: none;"></div>
+
+<!-- 🔹 MODAL DE HABILIDADE -->
+<div id="modal-habilidade" class="modal-overlay" style="display: none;" onclick="fecharModalHabilidade()">
+  <div class="modal-habilidade" onclick="event.stopPropagation()">
+
+    <input id="hab-nome" placeholder="Nome da habilidade">
+
+    <textarea id="hab-desc" placeholder="Descrição"></textarea>
+
+    <input id="hab-pd" placeholder="Custo em PD (ex: 1PD)">
+
+    <label class="checkbox-passiva">
+      <input type="checkbox" id="hab-passiva">
+      Passiva
+    </label>
+    <label class="checkbox-extra">
+  <input type="checkbox" id="hab-evolucao">
+  Divino
+</label>
+
+<label class="checkbox-extra">
+  <input type="checkbox" id="hab-raca">
+  Raça/Arquétipo
+</label>
+    <button class="btn-salvar" onclick="salvarHabilidade()">SALVAR</button>
+
+  </div>
+</div>
+
+
     <img
         src="https://i.imgur.com/LPMise3.png"
         class="pop-image"
@@ -1144,7 +1555,12 @@ body::-webkit-scrollbar {
 </div>
         </div>
     </div>
-  <div class="campo-editavel grande" contenteditable="true" id="campo-habilidades"><br></div>
+<!-- Campo original -->
+<div class="campo-editavel grande" contenteditable="true" id="campo-habilidades"><br></div>
+
+<!-- Campo ativo (duplicado) -->
+<div class="campo-editavel grande" contenteditable="true" id="campo-habilidades-ativo" style="display: none;"><br></div>
+
 </div>
 
   </div>
@@ -1154,8 +1570,15 @@ body::-webkit-scrollbar {
   <div class="inventario-linha">
     <span class="inventario-titulo">CARGA</span>
     <div class="campo-editavel pequeno" contenteditable="true" id="carga">0/0</div>
+
+        <!-- BOTÃO -->
+    <button class="btn-add-habilidade" onclick="abrirModalItem()">
+      + ADICIONAR ITEM
+    </button>
+
     <div class="hover-container">
   <img src="https://i.imgur.com/NkIMxw6.png" width="45">
+  
 
   <div class="mini-aba-hover" id="miniAbaHover">
     <img src="https://imgur.com/2QrgC0D.png" class="mini-imagem">
@@ -1168,7 +1591,41 @@ body::-webkit-scrollbar {
 </div>
   </div>
   <div class="campo-editavel grande" contenteditable="true" id="itens"><br></div>
+  
+    <!-- LISTA DE ITENS -->
+    <div id="lista-itens" class="lista-habilidades"></div>
+
+ <div id="modal-item" class="modal-overlay" style="display: none;" onclick="fecharModalItem()">
+
+  <div class="modal-habilidade" onclick="event.stopPropagation()">
+
+    <input id="item-nome" placeholder="Nome do item">
+
+    <textarea id="item-desc" placeholder="Descrição"></textarea>
+
+    <input id="item-espaco" type="number" placeholder="Espaço">
+
+    <input id="item-quantidade" type="number"  placeholder="Quantidade">
+
+    <input id="item-dano" placeholder="Dano (opcional)">
+
+    <label class="checkbox-passiva">
+      <input type="checkbox" id="item-tesouro">
+      Tesouro
+    </label>
+    <label>
+    <input type="checkbox" id="item-municao" /> Arma de Fogo/Consumível
+  </label>
+
+    <button type="button" class="btn-salvar" onclick="salvarItem()">SALVAR</button>
+
+
+  </div>
 </div>
+</div>
+
+</div>
+
 
   </div>
   <div class="conteudo-aba" id="idolos">
@@ -1184,6 +1641,9 @@ body::-webkit-scrollbar {
   <div class="campo-editavel grande" contenteditable="true" id="notas"><br></div>
   </div>
 </div>
+<button id="sanityHpToggle" class="buff-toggle">
+  <img src="https://i.imgur.com/UJOEI1t.png" alt="Buff Sanidade e HP">
+</button>
 
 
 <script>
@@ -1191,10 +1651,17 @@ body::-webkit-scrollbar {
    🔹 CONFIGURAÇÃO INICIAL
 ============================== */
 const personagemId = new URLSearchParams(window.location.search).get("page");
+
 if (!personagemId) {
   alert("Adicione ?page=nome na URL");
   throw new Error("Sem personagem");
 }
+/* ==============================
+   🔹 INVENTÁRIO — DADOS
+============================== */
+let itensInventario = [];
+let itemEmEdicao = null;
+
 
 /* ==============================
    🔹 FUNÇÕES DE SALVAR E CARREGAR DADOS
@@ -1216,7 +1683,7 @@ function carregarDados() {
     "info-nome","info-idade","info-raca","info-lvl","info-mov",
     "info-ph","info-foco","campo-habilidades","carga","itens","campo-idolos",
     "notas","resistencias","vulnerabilidades","proficiencias","mini1",
-    "mini2", "Avore da alma"
+    "mini2", "Avore da alma","campo-habilidades-ativo"
   ];
 
   camposTexto.forEach(id => {
@@ -1235,7 +1702,50 @@ function carregarDados() {
       }
     });
   });
+  // 🔹 CARREGA O ESTADO DO BOTÃO HP + SANIDADE
+db.ref(`texto/${personagemId}/modoBonus`).once("value", snap => {
+  bonusAtivo = snap.exists() ? snap.val() : false;
+
+  // 1️⃣ aplica o toggle antes de carregar cards
+  alternarHabilidadesAtivas(bonusAtivo);
+
+  const botao = document.getElementById("sanityHpToggle");
+  if (botao) botao.classList.toggle("ativo", bonusAtivo);
+
+  // 2️⃣ agora sim carrega os cards
+  carregarHabilidadesFirebase();
+  carregarInventarioFirebase();
+});
+
+
+
+  const hpInput = document.getElementById("hp-input");
+  const sanInput = document.getElementById("sanidade-input");
+  const campoOriginal = document.getElementById("campo-habilidades");
+const campoAtivo = document.getElementById("campo-habilidades-ativo");
+
+if (bonusAtivo) {
+  campoOriginal.style.display = "none";
+  campoAtivo.style.display = "block";
+} else {
+  campoOriginal.style.display = "block";
+  campoAtivo.style.display = "none";
 }
+}
+
+function salvarInventarioFirebase() {
+  db.ref(`inventario/${personagemId}`).set(itensInventario);
+}
+
+function carregarInventarioFirebase() {
+  db.ref(`inventario/${personagemId}`).once("value", snap => {
+    if (snap.exists()) {
+      itensInventario = snap.val();
+      renderizarInventario();
+    }
+  });
+}
+
 
 /* ==============================
    🔹 FUNÇÃO DE IMAGEM
@@ -1614,6 +2124,7 @@ function changeBar(tipo, amount) {
   input.value = `${current}/${max}${extra > 0 ? ` (${extra})` : ""}`;
 
   updateBar(tipo, input.value);
+  
 }
 
 function habilitarMarcadores(containerId) {
@@ -1727,7 +2238,7 @@ document.addEventListener('keydown', function(e) {
     const campo = range.startContainer.closest('[contenteditable="true"]');
 
     // Apenas campos específicos
-    const camposPermitidos = ["campo-habilidades", "notas", "itens", "campo-idolos"];
+    const camposPermitidos = ["campo-habilidades","campo-habilidades-ativo", "notas", "itens", "campo-idolos"];
     if (!campo || !camposPermitidos.includes(campo.id)) return;
 
     // cria a linha branca
@@ -1758,17 +2269,538 @@ document.addEventListener('keydown', function(e) {
 /* ==============================
    🔹 TROCA DE ABAS
 ============================== */
+
 function trocarAba(abaId) {
   document.querySelectorAll(".aba").forEach(el => el.classList.remove("ativa"));
   document.querySelectorAll(".conteudo-aba").forEach(el => el.style.display = "none");
   document.querySelector(`.aba[onclick*="${abaId}"]`).classList.add("ativa");
   document.getElementById(abaId).style.display = "block";
 }
+/* ==============================
+   🔹 MODAL DE HABILIDADE
+============================== */
+/* ==============================
+   🔹 MODAL DE ITEM (INVENTÁRIO)
+============================== */
+function abrirModalItem(itemId = null) {
+  const modal = document.getElementById("modal-item");
+  modal.style.display = "flex";
+
+  limparModalItem(); // limpa todos os campos sempre
+
+  if (itemId !== null) {
+    // Estamos editando
+    itemEmEdicao = itensInventario.findIndex(i => i.id === itemId);
+    const item = itensInventario[itemEmEdicao];
+    document.getElementById("item-nome").value = item.nome;
+    document.getElementById("item-desc").value = item.desc;
+    document.getElementById("item-espaco").value = item.espaco;
+    document.getElementById("item-quantidade").value = item.quantidade;
+    document.getElementById("item-dano").value = item.dano;
+    document.getElementById("item-tesouro").checked = item.tesouro;
+    document.getElementById("item-municao").checked = item.municao;
+  } else {
+    // Criando novo item
+    itemEmEdicao = null;
+  }
+}
+
+function limparModalItem() {
+  document.getElementById("item-nome").value = "";
+  document.getElementById("item-desc").value = "";
+  document.getElementById("item-espaco").value = 0;
+  document.getElementById("item-quantidade").value = 1;
+  document.getElementById("item-dano").value = "";
+  document.getElementById("item-tesouro").checked = false;
+  document.getElementById("item-municao").checked = false;
+  document.getElementById("item-municao").value = "0/0";
+}
+
+
+function fecharModalItem() {
+  document.getElementById("modal-item").style.display = "none";
+}
+
+function salvarItem() {
+  const nome = document.getElementById("item-nome").value.trim();
+  
+  const novoItem = {
+    id: itemEmEdicao !== null ? itensInventario[itemEmEdicao].id : Date.now().toString(),
+    nome: nome || "Novo Item",
+    desc: document.getElementById("item-desc").value,
+    espaco: Number(document.getElementById("item-espaco").value || 0),
+    quantidade: Number(document.getElementById("item-quantidade").value || 1),
+    dano: document.getElementById("item-dano").value,
+    tesouro: document.getElementById("item-tesouro").checked,
+    municao: document.getElementById("item-municao").checked,
+    valorMunicao: document.getElementById("item-municao").checked ? "0/0" : null
+  };
+
+  if (itemEmEdicao !== null) {
+    itensInventario[itemEmEdicao] = novoItem;
+  } else {
+    itensInventario.push(novoItem);
+  }
+
+  // 🔹 FECHA O MODAL PRIMEIRO
+  fecharModalItem();
+  itemEmEdicao = null;
+
+  // 🔹 SALVA E RENDERIZA INVENTÁRIO
+  salvarInventarioFirebase();
+  renderizarInventario();
+  limparModalItem(); // opcional: limpa campos
+}
+
+
+
+
+function renderizarInventario() {
+  const lista = document.getElementById("lista-itens");
+  lista.innerHTML = "";
+
+  itensInventario.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "card-item";
+    card.dataset.id = item.id;
+
+    if (item.tesouro) card.classList.add("tesouro");
+
+    card.style.width = '370px';
+    card.style.boxSizing = 'border-box';
+
+    card.innerHTML = `
+      <div style="display: flex; align-items: ${item.dano ? 'flex-start' : 'center'}; justify-content: space-between; width: 100%;">
+        <button class="toggle-desc" onclick="toggleDescricao(this)" 
+                style="align-self: center; margin-right: 6px; background: transparent; border: none; color: white; padding: 0; cursor: pointer; font-size: 1em;">
+          ▼
+        </button>
+        <div style="flex: 1; min-width: 0;">
+          <div style="margin-bottom: ${item.dano ? '2px' : '0'};">
+            <span class="item-nome" style="color: white; font-weight: bold;">${item.nome}</span>
+            <span class="item-municao" contenteditable="true" 
+                  style="display: ${item.municao ? 'inline-block' : 'none'};">${item.valorMunicao || '0/0'}</span>
+          </div>
+          ${item.dano ? `<div style="font-size: 0.85em; color: #ccc; overflow: hidden;">DANO: ${item.dano}</div>` : ''}
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; min-width: 0;">
+          <span class="item-espaco" style="font-size: 1.1em; font-weight: bold; color: white;">${item.espaco}</span>
+          <span class="item-quantidade" style="font-size: 0.85em; color: #888;">${item.quantidade}x</span>
+        </div>
+      </div>
+      <div class="card-acoes">
+        <button class="card-acao" onclick="editarItemPorId('${item.id}')">✎</button>
+        <button class="card-acao" onclick="excluirItemPorId('${item.id}')">🗑</button>
+      </div>
+      <div class="item-desc" style="display: none; width: 100%; border-top: 2px solid white; padding-top: 8px; box-sizing: border-box;">
+        ${item.desc}
+      </div>
+    `;
+
+    if (item.municao) {
+      const spanMunicao = card.querySelector(".item-municao");
+      spanMunicao.addEventListener("input", () => {
+        item.valorMunicao = spanMunicao.innerText;
+        salvarInventarioFirebase();
+      });
+    }
+
+    lista.appendChild(card);
+
+    // 🔹 Aqui ativamos o drag para cada card
+    ativarDragNoCard(card, lista);
+  });
+}
+
+
+
+
+function editarItem(index) {
+  itemEmEdicao = index; // 🔥 ESSENCIAL
+
+  const item = itensInventario[index];
+
+  document.getElementById("item-nome").value = item.nome;
+  document.getElementById("item-desc").value = item.desc;
+  document.getElementById("item-espaco").value = item.espaco;
+  document.getElementById("item-quantidade").value = item.quantidade;
+  document.getElementById("item-dano").value = item.dano;
+  document.getElementById("item-tesouro").checked = item.tesouro;
+
+  document.getElementById("modal-item").style.display = "flex";
+}
+function editarItemPorId(id) {
+  const index = itensInventario.findIndex(i => i.id === id);
+  if (index === -1) return;
+
+  itemEmEdicao = index;
+  const item = itensInventario[index];
+
+  document.getElementById("item-nome").value = item.nome;
+  document.getElementById("item-desc").value = item.desc;
+  document.getElementById("item-espaco").value = item.espaco;
+  document.getElementById("item-quantidade").value = item.quantidade;
+  document.getElementById("item-dano").value = item.dano;
+  document.getElementById("item-tesouro").checked = item.tesouro;
+
+  document.getElementById("modal-item").style.display = "flex";
+}
+
+
+
+function excluirItem(index) {
+  itensInventario.splice(index, 1);
+  salvarInventarioFirebase();
+  renderizarInventario();
+  fecharModalItem();
+}
+function excluirItemPorId(id) {
+  itensInventario = itensInventario.filter(i => i.id !== id);
+  salvarInventarioFirebase();
+  renderizarInventario();
+}
+
+
+/* ===============================
+   CONTROLE DE EDIÇÃO
+================================ */
+let cardEmEdicao = null;
+
+/* ===============================
+   ABRIR / FECHAR MODAL
+================================ */
+function abrirModalHabilidade() {
+  document.getElementById('modal-habilidade').style.display = 'flex';
+}
+
+function fecharModalHabilidade() {
+  document.getElementById('modal-habilidade').style.display = 'none';
+}
+
+/* ===============================
+   LIMPAR MODAL
+================================ */
+function limparModalHabilidade() {
+  document.getElementById('hab-nome').value = '';
+  document.getElementById('hab-desc').value = '';
+  document.getElementById('hab-pd').value = '';
+  document.getElementById('hab-passiva').checked = false;
+  document.getElementById('hab-evolucao').checked = false;
+  document.getElementById('hab-raca').checked = false;
+}
+
+/* ===============================
+   NOVA HABILIDADE
+================================ */
+function abrirModalNovaHabilidade() {
+  cardEmEdicao = null;
+  limparModalHabilidade();
+  abrirModalHabilidade();
+}
+
+/* ===============================
+   EDITAR HABILIDADE
+================================ */
+function editarHabilidade(botao) {
+  cardEmEdicao = botao.closest('.card-habilidade');
+
+  document.getElementById('hab-nome').value =
+    cardEmEdicao.querySelector('.card-nome').innerText;
+
+  document.getElementById('hab-desc').value =
+    cardEmEdicao.querySelector('.card-desc').innerText;
+
+  const isPassiva = cardEmEdicao.classList.contains('passiva');
+  document.getElementById('hab-passiva').checked = isPassiva;
+
+  const badge = cardEmEdicao.querySelector('.badge');
+  document.getElementById('hab-pd').value =
+    isPassiva ? '' : badge.innerText;
+
+  abrirModalHabilidade();
+}
+
+/* ===============================
+   SALVAR HABILIDADE
+================================ */
+function salvarHabilidade() {
+  const nome = document.getElementById("hab-nome").value.trim();
+  const desc = document.getElementById("hab-desc").value.trim();
+  const pd = document.getElementById("hab-pd").value.trim();
+  const passiva = document.getElementById("hab-passiva").checked;
+  const evolucao = document.getElementById('hab-evolucao').checked;
+  const raca = document.getElementById('hab-raca').checked;
+
+
+  if (!nome) return;
+
+  if (cardEmEdicao) {
+    // 🔄 edição
+    cardEmEdicao.querySelector(".card-nome").innerText = nome;
+    cardEmEdicao.querySelector(".card-desc").innerText = desc;
+
+cardEmEdicao.classList.remove("passiva", "pd", "evolucao", "raca");
+
+if (passiva) cardEmEdicao.classList.add("passiva");
+else cardEmEdicao.classList.add("pd");
+
+if (evolucao) {
+  cardEmEdicao.classList.add("evolucao");
+} else if (raca) {
+  cardEmEdicao.classList.add("raca");
+}
+
+
+    const badge = cardEmEdicao.querySelector(".badge");
+    badge.className = `badge ${passiva ? "badge-passiva" : "badge-pd"}`;
+    badge.innerText = passiva ? "PASSIVA" : (pd || "PD");
+  } else {
+    // ➕ nova
+   criarCardHabilidade({ nome, desc, passiva, pd, evolucao, raca });
+
+  }
+
+  salvarHabilidadesFirebase();
+  fecharModalHabilidade();
+  limparModalHabilidade();
+  cardEmEdicao = null;
+}
+
+
+/* ===============================
+   EXCLUIR HABILIDADE
+================================ */
+function excluirHabilidade(botao) {
+  const card = botao.closest(".card-habilidade");
+  card.remove();
+  salvarHabilidadesFirebase();
+}
+
+
+
+/* ===============================
+   🔹 HABILIDADES — FIREBASE
+================================ */
+function salvarHabilidadesFirebase() {
+  const salvarLista = (listaId, caminho) => {
+    const lista = document.getElementById(listaId);
+    const habilidades = {};
+    lista.querySelectorAll(".card-habilidade").forEach(card => {
+      const id = card.dataset.id;
+habilidades[id] = {
+  nome: card.querySelector(".card-nome").innerText,
+  desc: card.querySelector(".card-desc").innerHTML,
+  passiva: card.classList.contains("passiva"),
+  pd: card.classList.contains("passiva") ? "" : card.querySelector(".badge").innerText,
+  evolucao: card.classList.contains("evolucao"),
+  raca: card.classList.contains("raca")
+};
+
+    });
+    db.ref(`habilidades/${personagemId}/${caminho}`).set(habilidades);
+  }
+
+  salvarLista("lista-habilidades", "normal");
+  salvarLista("lista-habilidades-ativo", "ativo");
+}
+
+
+
+let habilidadesCarregadas = false;
+
+function carregarHabilidadesFirebase() {
+  if (habilidadesCarregadas) return;
+  habilidadesCarregadas = true;
+
+  const listaNormal = document.getElementById("lista-habilidades");
+  const listaAtivo = document.getElementById("lista-habilidades-ativo");
+
+  listaNormal.innerHTML = "";
+  listaAtivo.innerHTML = "";
+
+  const carregarLista = (caminho, lista) => {
+  db.ref(`habilidades/${personagemId}/${caminho}`).once("value", snap => {
+    if (!snap.exists()) return;
+
+    Object.entries(snap.val()).forEach(([id, hab]) => {
+      criarCardHabilidade(hab, id, lista.id);
+    });
+
+    // ⬇️ aplica ordem salva
+    db.ref(`habilidades/${personagemId}/ordem/${caminho}`)
+      .once("value", snapOrd => {
+        if (snapOrd.exists()) {
+          aplicarOrdem(lista, snapOrd.val());
+        }
+      });
+  });
+};
+
+
+  carregarLista("normal", listaNormal);
+  carregarLista("ativo", listaAtivo);
+}
+
+function toggleDescricao(botao) {
+  const card = botao.closest(".card-habilidade");
+  if (!card) return;
+
+  const desc = card.querySelector(".card-desc");
+  if (!desc) return;
+
+  if (desc.style.display === "none" || desc.style.display === "") {
+    desc.style.display = "block";
+    botao.textContent = "▲";
+  } else {
+    desc.style.display = "none";
+    botao.textContent = "▼";
+  }
+}
+
+
+function criarCardHabilidade(dados, id = null, destinoId = null) {
+  const card = document.createElement("div");
+  card.className = "card-habilidade";
+
+  // tipo base
+  if (dados.passiva) card.classList.add("passiva");
+  else card.classList.add("pd");
+
+  // prioridade visual
+  if (dados.evolucao) {
+    card.classList.add("evolucao");
+  } else if (dados.raca) {
+    card.classList.add("raca");
+  }
+
+  const habilidadeId = id || Date.now().toString();
+  card.dataset.id = habilidadeId;
+
+
+  // Limpa o card
+card.innerHTML = "";
+
+// Container do topo (seta + nome + badge)
+const cardTopo = document.createElement("div");
+cardTopo.className = "card-topo";
+cardTopo.style.display = "flex";
+cardTopo.style.justifyContent = "space-between"; 
+cardTopo.style.alignItems = "center";
+cardTopo.style.gap = "8px";
+
+// Container esquerda: seta + nome
+const esquerda = document.createElement("div");
+esquerda.style.display = "flex";
+esquerda.style.alignItems = "center";
+esquerda.style.gap = "6px";
+
+// Botão de toggle (seta)
+const toggleBtn = document.createElement("button");
+toggleBtn.className = "toggle-desc";
+toggleBtn.textContent = "▼"; // ou use toggleBtn.innerHTML = '<img src="seta.png">';
+toggleBtn.style.cursor = "pointer";
+toggleBtn.style.background = "transparent"; // fundo transparente
+toggleBtn.style.border = "none";           // remove borda
+toggleBtn.style.padding = "0";             // remove padding
+toggleBtn.style.outline = "none";          // remove outline ao clicar
+toggleBtn.style.color = "white";  // seta branca
+
+// Nome
+const cardNome = document.createElement("span");
+cardNome.className = "card-nome";
+cardNome.textContent = dados.nome;
+
+// Adiciona seta e nome no container da esquerda
+esquerda.appendChild(toggleBtn);
+esquerda.appendChild(cardNome);
+
+// Badge (à direita)
+const badge = document.createElement("span");
+badge.className = "badge " + (dados.passiva ? "badge-passiva" : "badge-pd");
+badge.textContent = dados.passiva ? "PASSIVA" : (dados.pd || "PD");
+
+// Adiciona esquerda + badge no topo
+cardTopo.appendChild(esquerda);
+cardTopo.appendChild(badge);
+
+// Linha branca acima da descrição
+const linha = document.createElement("div");
+linha.style.height = "1px";
+linha.style.backgroundColor = "white";
+linha.style.margin = "6px 0";
+linha.style.width = "100%";
+linha.style.display = "none"; // começa escondida junto com a descrição
+
+// Descrição
+const cardDesc = document.createElement("div");
+cardDesc.className = "card-desc";
+cardDesc.style.display = "none";
+cardDesc.innerHTML = dados.desc;
+
+// Função de toggle
+toggleBtn.onclick = function() {
+  if (cardDesc.style.display === "none") {
+    cardDesc.style.display = "block";
+    linha.style.display = "block"; // mostra a linha junto
+    toggleBtn.textContent = "▲";
+  } else {
+    cardDesc.style.display = "none";
+    linha.style.display = "none"; // esconde a linha junto
+    toggleBtn.textContent = "▼";
+  }
+};
+
+// Adiciona topo, linha e descrição no card
+card.appendChild(cardTopo);
+card.appendChild(linha);
+card.appendChild(cardDesc);
+
+// Ações
+const cardAcoes = document.createElement("div");
+cardAcoes.className = "card-acoes";
+
+const btnEditar = document.createElement("button");
+btnEditar.className = "card-acao";
+btnEditar.textContent = "✎";
+btnEditar.onclick = function() { editarHabilidade(this); };
+
+const btnExcluir = document.createElement("button");
+btnExcluir.className = "card-acao";
+btnExcluir.textContent = "🗑";
+btnExcluir.onclick = function() { excluirHabilidade(this); };
+
+cardAcoes.appendChild(btnEditar);
+cardAcoes.appendChild(btnExcluir);
+card.appendChild(cardAcoes);
+
+  // Define destino correto
+  let destino;
+  if (destinoId) {
+    destino = document.getElementById(destinoId);
+  } else {
+    destino = document.getElementById(
+      document.getElementById('campo-habilidades-ativo').style.display === 'block'
+        ? 'lista-habilidades-ativo'
+        : 'lista-habilidades'
+    );
+  }
+
+  destino.appendChild(card);
+  ativarDragNoCard(card, destino);
+
+}
+
+
+
 
 /* ==============================
    🔹 EXECUÇÃO
 ============================== */
-document.addEventListener("DOMContentLoaded", carregarDados);
+document.addEventListener("DOMContentLoaded", () => {
+  carregarDados();
+  carregarInventarioFirebase();
+});
+
 document.addEventListener("paste", function (e) {
   const target = e.target;
 
@@ -1777,6 +2809,7 @@ document.addEventListener("paste", function (e) {
     const text = (e.clipboardData || window.clipboardData).getData("text/plain");
     document.execCommand("insertText", false, text);
   }
+  
 });
 // Containers que devem usar parágrafos
 const containers = ["campo-habilidades", "itens", "campo-idolos", "notas"];
@@ -1794,6 +2827,83 @@ containers.forEach(id => {
     transformarEmParagrafos(campo);
   });
 });
+document.addEventListener("keydown", (e) => {
+  if (e.shiftKey && e.code === "KeyC") {
+    e.preventDefault();
+
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const campo = sel.focusNode?.parentElement.closest('[contenteditable="true"]');
+    if (!campo) return;
+
+    // Salva a seleção atual
+    const range = sel.getRangeAt(0).cloneRange();
+
+    // Paleta de cores (como Notion)
+    const cores = [
+      "#ef4444","#f97316","#eab308","#27AE60","#14b8a6","#3b82f6",
+      "#8b5cf6","#ec4899","#f87171","#fb923c","#F2C94C","#4ade80",
+      "#2dd4bf","#60a5fa","#a78bfa","#f9a8d4","#ffffff","#000000"
+    ];
+
+    // Remove qualquer paleta anterior
+    const antiga = document.getElementById("paleta-cor-flutuante");
+    if (antiga) antiga.remove();
+
+    const paleta = document.createElement("div");
+    paleta.id = "paleta-cor-flutuante";
+    paleta.style.position = "fixed";
+    paleta.style.top = (e.clientY + 5) + "px";
+    paleta.style.left = (e.clientX + 5) + "px";
+    paleta.style.background = "#1a1a1a";
+    paleta.style.padding = "8px";
+    paleta.style.borderRadius = "8px";
+    paleta.style.display = "flex";
+    paleta.style.flexWrap = "wrap";
+    paleta.style.zIndex = 9999;
+    paleta.style.boxShadow = "0 4px 12px rgba(0,0,0,0.5)";
+
+    cores.forEach(cor => {
+      const bolinha = document.createElement("div");
+      bolinha.style.width = "24px";
+      bolinha.style.height = "24px";
+      bolinha.style.borderRadius = "50%";
+      bolinha.style.backgroundColor = cor;
+      bolinha.style.margin = "4px";
+      bolinha.style.cursor = "pointer";
+      bolinha.style.border = "2px solid #000";
+
+      bolinha.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+
+        // Restaura a seleção original
+        campo.focus();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        // Aplica a cor
+        document.execCommand("foreColor", false, cor);
+        salvarTexto(campo.id);
+        paleta.remove();
+      });
+
+      paleta.appendChild(bolinha);
+    });
+
+    document.body.appendChild(paleta);
+
+    // Fecha se clicar fora
+    const fechar = (ev) => {
+      if (!paleta.contains(ev.target)) {
+        paleta.remove();
+        document.removeEventListener("click", fechar);
+      }
+    };
+    setTimeout(() => document.addEventListener("click", fechar), 10);
+  }
+});
+
 
 // Função que envolve tudo em div.paragrafo
 function transformarEmParagrafos(campo) {
@@ -1831,5 +2941,133 @@ function transformarEmParagrafos(campo) {
         function closeModal() {
             modal.style.display = "none";
         }
+/* ==============================
+   🔹 BOTÃO HP + SANIDADE (TOGGLE)
+============================== */
+let bonusAtivo = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const botao = document.getElementById("sanityHpToggle");
+  if (!botao) return;
+
+  botao.addEventListener("click", () => {
+    const hpInput = document.getElementById("hp-input");
+    const sanInput = document.getElementById("sanidade-input");
+
+    if (!hpInput || !sanInput) return;
+
+    bonusAtivo = !bonusAtivo;
+alternarHabilidadesAtivas(bonusAtivo);
+
+
+
+    // 💜 Alterna a classe ativo para o brilho roxo
+    botao.classList.toggle("ativo", bonusAtivo);
+
+    aplicarBonus(hpInput, bonusAtivo);
+    aplicarBonus(sanInput, bonusAtivo);
+    db.ref(`texto/${personagemId}/modoBonus`).set(bonusAtivo);
+  });
+});
+
+function aplicarBonus(input, ativar) {
+  const match = input.value.match(/^(-?\d+)\s*\/\s*(\d+)(?:\s*\((\-?\d+)\))?$/);
+  if (!match) return;
+
+  let atual = parseInt(match[1]);
+  let max = parseInt(match[2]);
+  let extra = parseInt(match[3]) || 0;
+
+  if (ativar) {
+    atual += 15;
+    max += 15;
+  } else {
+    atual -= 15;
+    max -= 15;
+  }
+
+  atual = Math.min(atual, max);
+
+  input.value = `${atual}/${max}${extra ? ` (${extra})` : ""}`;
+
+  if (input.id === "hp-input") updateHP(input.value);
+  if (input.id === "sanidade-input") updateBar("sanidade", input.value);
+}
+function alternarHabilidadesAtivas(ativar) {
+  // 🔹 CAMPOS EDITÁVEIS
+  document.getElementById('campo-habilidades').style.display = ativar ? 'none' : 'block';
+  document.getElementById('campo-habilidades-ativo').style.display = ativar ? 'block' : 'none';
+
+  // 🔹 CARDS
+  document.getElementById('lista-habilidades').style.display = ativar ? 'none' : 'block';
+  document.getElementById('lista-habilidades-ativo').style.display = ativar ? 'block' : 'none';
+}
+document.addEventListener("DOMContentLoaded", () => {
+  carregarDados();
+});
+
+function toggleDescricao(botao) {
+  // Encontra o card pai
+  const card = botao.closest('.card-item');
+  if (!card) return;
+
+  // Encontra a descrição dentro do card
+  const desc = card.querySelector('.item-desc');
+  if (!desc) return;
+
+  // Alterna entre mostrar/esconder
+  if (desc.style.display === 'none') {
+    desc.style.display = 'block';
+    botao.textContent = '▲'; // seta para cima
+  } else {
+    desc.style.display = 'none';
+    botao.textContent = '▼'; // seta para baixo
+  }
+}
+function ativarDragNoCard(card, container) {
+  card.draggable = true;
+
+  card.addEventListener("dragstart", () => {
+    card.classList.add("arrastando");
+  });
+
+  card.addEventListener("dragover", e => e.preventDefault());
+
+  card.addEventListener("drop", () => {
+    const arrastando = container.querySelector(".arrastando");
+    if (!arrastando || arrastando === card) return;
+    container.insertBefore(arrastando, card);
+  });
+
+  card.addEventListener("dragend", () => {
+    card.classList.remove("arrastando");
+
+    // 🔹 INVENTÁRIO
+    if (card.classList.contains("card-item")) {
+      const ordem = [...container.children].map(c => c.dataset.id);
+      itensInventario = ordem
+        .map(id => itensInventario.find(i => i.id === id))
+        .filter(Boolean);
+      salvarInventarioFirebase();
+    }
+
+    // 🔹 HABILIDADES
+    if (card.classList.contains("card-habilidade")) {
+      const tipo = container.id === "lista-habilidades-ativo" ? "ativo" : "normal";
+      salvarOrdemHabilidades(container, tipo);
+    }
+  });
+}
+function aplicarOrdem(container, ordem) {
+  ordem.forEach(id => {
+    const card = container.querySelector(`[data-id="${id}"]`);
+    if (card) container.appendChild(card);
+  });
+}
+function salvarOrdemHabilidades(container, tipo) {
+  const ordem = [...container.children].map(c => c.dataset.id);
+  db.ref(`habilidades/${personagemId}/ordem/${tipo}`).set(ordem);
+}
+
 </script>
 
