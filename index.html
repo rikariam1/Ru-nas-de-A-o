@@ -64,6 +64,10 @@ body::-webkit-scrollbar {
   z-index: 1;
 }
 
+.circulo-ferido {
+  display: none;
+}
+
 .circulo-principal img {
   width: 100%;
   height: 100%;
@@ -624,8 +628,6 @@ body::-webkit-scrollbar {
   left: 75%;
   transform: none;
 }
-
-
 
     .info-esquerda {
     position: absolute;
@@ -1396,12 +1398,13 @@ body::-webkit-scrollbar {
 .item-municao {
   cursor: pointer;
 }
-
-     @media screen and (max-width: 768px) {
+ @media screen and (max-width: 768px) {
 
 .buff-toggle {
     left: 10px;
 }
+    
+ }
   </style>
 
   <!-- Firebase SDK -->
@@ -1424,10 +1427,17 @@ body::-webkit-scrollbar {
 <body>
 
   <div class="circulos-wrapper">
-    <div class="circulo-principal" onclick="document.getElementById('upload').click()">
-      <img id="preview" src="" alt="">
-    </div>
-    <input type="file" id="upload" accept="image/*" onchange="handleImage(event)" />
+    <div class="circulo-principal" id="circulo-normal" onclick="document.getElementById('upload-normal').click()">
+  <img id="preview-normal" src="" alt="">
+</div>
+<input type="file" id="upload-normal" accept="image/*" onchange="handleImage(event, 'normal')" />
+
+<div class="circulo-principal circulo-ferido" id="circulo-ferido"
+     onclick="document.getElementById('upload-ferido').click()">
+  <img id="preview-ferido" src="" alt="">
+</div>
+<input type="file" id="upload-ferido" accept="image/*" onchange="handleImage(event, 'ferido')" />
+
 
     <div class="circulo-menor centro"><div class="editavel" contenteditable="true" id="edit-vig"></div><span>VIG</span></div>
     <div class="circulo-menor direita"><div class="editavel" contenteditable="true" id="edit-agi"></div><span>PRE</span></div>
@@ -1740,9 +1750,14 @@ function salvarTexto(id) {
 
 function carregarDados() {
   // imagem
-  db.ref("imagem/" + personagemId).once("value", snap => {
-    if (snap.exists()) document.getElementById("preview").src = snap.val();
-  });
+  db.ref(`imagem/${personagemId}/normal`).once("value", snap => {
+  if (snap.exists()) document.getElementById("preview-normal").src = snap.val();
+});
+
+db.ref(`imagem/${personagemId}/ferido`).once("value", snap => {
+  if (snap.exists()) document.getElementById("preview-ferido").src = snap.val();
+});
+
 
   // textos comuns
   const camposTexto = [
@@ -1817,18 +1832,26 @@ function carregarInventarioFirebase() {
 /* ==============================
    🔹 FUNÇÃO DE IMAGEM
 ============================== */
-function handleImage(event) {
+function handleImage(event, tipo) {
   const file = event.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
   reader.onload = e => {
     const base64 = e.target.result;
-    document.getElementById('preview').src = base64;
-    db.ref("imagem/" + personagemId).set(base64);
+
+    if (tipo === "normal") {
+      document.getElementById("preview-normal").src = base64;
+      db.ref(`imagem/${personagemId}/normal`).set(base64);
+    } else {
+      document.getElementById("preview-ferido").src = base64;
+      db.ref(`imagem/${personagemId}/ferido`).set(base64);
+    }
   };
+
   reader.readAsDataURL(file);
 }
+
 
 /* ==============================
    🔹 PERÍCIAS
@@ -1932,6 +1955,18 @@ if (current > 0) {
   if (current > max) excPerc = ((current - max) / max) * 100;
   if (extra > 0) excPerc += (extra / max) * 100;
   excesso.style.width = Math.min(excPerc, 100) + "%";
+
+  const circuloNormal = document.getElementById("circulo-normal");
+const circuloFerido = document.getElementById("circulo-ferido");
+
+if (perc <= 50) {
+  circuloNormal.style.display = "none";
+  circuloFerido.style.display = "block";
+} else {
+  circuloNormal.style.display = "block";
+  circuloFerido.style.display = "none";
+}
+
 
   // Cores e estado
   if (current <= 0) {
@@ -3137,5 +3172,4 @@ function salvarOrdemHabilidades(container, tipo) {
 }
 
 </script>
-
 
